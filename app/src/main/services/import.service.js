@@ -43,8 +43,8 @@ function importer({ buffer, nomFichier }) {
   `);
   const insererHistorique = db.prepare(`
     INSERT INTO imports (nom_fichier, nb_lignes_fichier, nb_trouves, nb_non_trouves,
-                          numeros_non_trouves, numeros_actives)
-    VALUES (?, ?, ?, ?, ?, ?)
+                          numeros_non_trouves, numeros_actives, nb_actives)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
   `);
 
   const appliquer = db.transaction(() => {
@@ -72,7 +72,8 @@ function importer({ buffer, nomFichier }) {
       trouves.length,
       nonTrouves.length,
       JSON.stringify(nonTrouves),
-      JSON.stringify(trouves)
+      JSON.stringify(trouves),
+      actives
     );
 
     return {

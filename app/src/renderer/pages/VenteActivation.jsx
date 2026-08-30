@@ -1,5 +1,13 @@
 import { useEffect, useState } from 'react';
+import { ShoppingCart, CheckCircle2, CalendarDays } from 'lucide-react';
 import { ventesApi, apporteursApi } from '../api/bridge.js';
+
+const inputClass =
+  'w-full border border-outline-variant rounded-lg p-3 bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all';
+
+function compterLignes(texte) {
+  return texte.split('\n').map((l) => l.trim()).filter(Boolean).length;
+}
 
 export default function VenteActivation() {
   const [tab, setTab] = useState('vente');
@@ -29,7 +37,7 @@ export default function VenteActivation() {
       apporteur: typeVente === 'apporteur' ? apporteur : '',
       destinataire,
     });
-    setMessageVente(`${res.modifies} décodeur(s) marqué(s) vendu(s)`);
+    setMessageVente(`Vente enregistrée avec succès (${res.modifies} unité${res.modifies > 1 ? 's' : ''})`);
     setNumerosVente('');
   };
 
@@ -42,42 +50,87 @@ export default function VenteActivation() {
   };
 
   return (
-    <div className="space-y-4">
-      <h1 className="text-2xl font-bold">Vente / Activation manuelle</h1>
+    <div className="flex flex-col gap-6">
+      <h1 className="font-page-title text-page-title text-on-surface">Vente & Activation</h1>
 
-      <div role="tablist" className="tabs tabs-boxed w-fit">
-        <a role="tab" className={`tab ${tab === 'vente' ? 'tab-active' : ''}`} onClick={() => setTab('vente')}>
-          Marquer comme vendu
-        </a>
-        <a role="tab" className={`tab ${tab === 'activation' ? 'tab-active' : ''}`} onClick={() => setTab('activation')}>
-          Marquer comme activé
-        </a>
+      {/* Onglets pilule */}
+      <div className="flex justify-center w-full">
+        <div className="inline-flex bg-surface-container-low p-1 rounded-full border border-outline-variant/50">
+          <button
+            type="button"
+            onClick={() => setTab('vente')}
+            className={`px-6 py-2 rounded-full font-subtitle text-subtitle text-sm transition-all flex items-center gap-2 ${
+              tab === 'vente'
+                ? 'bg-white shadow-sm text-status-orange-text ring-1 ring-outline-variant/20'
+                : 'text-secondary hover:text-on-surface'
+            }`}
+          >
+            <ShoppingCart size={16} />
+            Marquer comme vendu
+          </button>
+          <button
+            type="button"
+            onClick={() => setTab('activation')}
+            className={`px-6 py-2 rounded-full font-subtitle text-subtitle text-sm transition-all flex items-center gap-2 ${
+              tab === 'activation'
+                ? 'bg-white shadow-sm text-status-green-text ring-1 ring-outline-variant/20'
+                : 'text-secondary hover:text-on-surface'
+            }`}
+          >
+            <CheckCircle2 size={16} />
+            Marquer comme activé
+          </button>
+        </div>
       </div>
 
       {tab === 'vente' && (
-        <form onSubmit={soumettreVente} className="card bg-base-100 shadow p-6 space-y-4 max-w-2xl">
-          <textarea
-            className="textarea textarea-bordered w-full h-32 font-mono text-sm"
-            value={numerosVente}
-            onChange={(e) => setNumerosVente(e.target.value)}
-            placeholder={'Numéros de série, un par ligne'}
-            required
-          />
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <select className="select select-bordered w-full" value={typeVente} onChange={(e) => setTypeVente(e.target.value)}>
-              <option value="equipe">Vente équipe interne</option>
-              <option value="apporteur">Via apporteur d'affaires</option>
-            </select>
-            <input type="date" className="input input-bordered w-full" value={dateVente} onChange={(e) => setDateVente(e.target.value)} />
+        <form
+          onSubmit={soumettreVente}
+          className="max-w-[640px] mx-auto w-full bg-surface-container-lowest rounded-xl border border-border-color shadow-level-1 p-8 flex flex-col gap-6"
+        >
+          <div className="flex flex-col gap-2">
+            <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+              Numéros de série (un par ligne)
+            </label>
+            <textarea
+              className={`${inputClass} font-mono text-sm leading-5 resize-none`}
+              rows={6}
+              value={numerosVente}
+              onChange={(e) => setNumerosVente(e.target.value)}
+              placeholder={'Ex: 03214569874\n03214569875\n03214569876'}
+              required
+            />
           </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex flex-col gap-2">
+              <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+                Type de vente
+              </label>
+              <select className={inputClass} value={typeVente} onChange={(e) => setTypeVente(e.target.value)}>
+                <option value="equipe">Équipe interne</option>
+                <option value="apporteur">Apporteur d'affaires</option>
+              </select>
+            </div>
+            <div className="flex flex-col gap-2">
+              <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+                Date de vente
+              </label>
+              <input type="date" className={inputClass} value={dateVente} onChange={(e) => setDateVente(e.target.value)} />
+            </div>
+          </div>
+
           {typeVente === 'apporteur' && (
-            <div>
+            <div className="flex flex-col gap-2">
+              <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+                Nom de l'apporteur
+              </label>
               <input
                 list="liste-apporteurs"
-                className="input input-bordered w-full"
+                className={inputClass}
                 value={apporteur}
                 onChange={(e) => setApporteur(e.target.value)}
-                placeholder="Nom de l'apporteur"
+                placeholder="Rechercher un apporteur..."
                 required
               />
               <datalist id="liste-apporteurs">
@@ -87,30 +140,98 @@ export default function VenteActivation() {
               </datalist>
             </div>
           )}
-          <input
-            type="text"
-            className="input input-bordered w-full"
-            value={destinataire}
-            onChange={(e) => setDestinataire(e.target.value)}
-            placeholder="Destinataire / Client (optionnel)"
-          />
-          <button type="submit" className="btn btn-warning">Marquer comme vendu</button>
-          {messageVente && <div className="alert alert-success text-sm">{messageVente}</div>}
+
+          <div className="flex flex-col gap-2">
+            <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+              Destinataire / Client <span className="normal-case opacity-60">(Optionnel)</span>
+            </label>
+            <input
+              type="text"
+              className={inputClass}
+              value={destinataire}
+              onChange={(e) => setDestinataire(e.target.value)}
+              placeholder="Nom du client final"
+            />
+          </div>
+
+          <div className="pt-2 flex flex-col gap-4">
+            <button
+              type="submit"
+              className="w-full bg-status-orange-text text-white font-subtitle text-subtitle py-3 rounded-lg hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+            >
+              <ShoppingCart size={18} />
+              Marquer comme vendu
+            </button>
+            {messageVente && (
+              <div className="flex items-center justify-center gap-2 text-status-green-text bg-status-green-bg px-4 py-2 rounded-lg mx-auto">
+                <CheckCircle2 size={18} />
+                <span className="text-sm font-medium">{messageVente}</span>
+              </div>
+            )}
+          </div>
         </form>
       )}
 
       {tab === 'activation' && (
-        <form onSubmit={soumettreActivation} className="card bg-base-100 shadow p-6 space-y-4 max-w-2xl">
-          <textarea
-            className="textarea textarea-bordered w-full h-32 font-mono text-sm"
-            value={numerosActivation}
-            onChange={(e) => setNumerosActivation(e.target.value)}
-            placeholder={'Numéros de série, un par ligne'}
-            required
-          />
-          <input type="date" className="input input-bordered w-full" value={dateActivation} onChange={(e) => setDateActivation(e.target.value)} />
-          <button type="submit" className="btn btn-success">Marquer comme activé</button>
-          {messageActivation && <div className="alert alert-success text-sm">{messageActivation}</div>}
+        <form
+          onSubmit={soumettreActivation}
+          className="max-w-[640px] mx-auto w-full bg-surface-container-lowest rounded-xl border border-border-color shadow-level-1 p-8 flex flex-col gap-6"
+        >
+          <div className="flex items-center gap-3 pb-4 border-b border-border-color">
+            <div className="w-10 h-10 rounded-full bg-status-green-bg flex items-center justify-center text-status-green-text">
+              <CheckCircle2 size={20} />
+            </div>
+            <div>
+              <h3 className="font-subtitle text-subtitle text-on-surface">Activation des équipements</h3>
+              <p className="font-label-metadata text-label-metadata text-secondary mt-1">
+                Saisissez les numéros de série et la date.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="font-subtitle text-subtitle text-on-surface flex justify-between items-end">
+              Numéros de série à activer
+              <span className="font-label-metadata text-label-metadata text-secondary font-normal">
+                {compterLignes(numerosActivation)} ligne(s) détectée(s)
+              </span>
+            </label>
+            <textarea
+              className={`${inputClass} font-mono text-sm leading-5 resize-none`}
+              rows={8}
+              value={numerosActivation}
+              onChange={(e) => setNumerosActivation(e.target.value)}
+              placeholder={'043298471203\n043298471204\n043298471205'}
+              required
+            />
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="font-subtitle text-subtitle text-on-surface">Date d'activation</label>
+            <div className="relative">
+              <CalendarDays size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none" />
+              <input
+                type="date"
+                className={`${inputClass} pl-10`}
+                value={dateActivation}
+                onChange={(e) => setDateActivation(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="mt-2 w-full h-12 bg-status-green-text text-white rounded-lg font-subtitle text-subtitle font-semibold hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+          >
+            <CheckCircle2 size={18} />
+            Marquer comme activé
+          </button>
+          {messageActivation && (
+            <div className="flex items-center justify-center gap-2 text-status-green-text bg-status-green-bg px-4 py-2 rounded-lg mx-auto">
+              <CheckCircle2 size={18} />
+              <span className="text-sm font-medium">{messageActivation}</span>
+            </div>
+          )}
         </form>
       )}
     </div>

@@ -9,11 +9,10 @@ const { setDbForTests } = require('../src/main/db/database');
 function creerBaseAvecDecodeurs(rows) {
   const db = new Database(':memory:');
   db.pragma('foreign_keys = ON');
-  const sql = fs.readFileSync(
-    path.join(__dirname, '../src/main/db/migrations/0001_init.sql'),
-    'utf-8'
-  );
-  db.exec(sql);
+  const migrationsDir = path.join(__dirname, '../src/main/db/migrations');
+  for (const file of fs.readdirSync(migrationsDir).filter((f) => f.endsWith('.sql')).sort()) {
+    db.exec(fs.readFileSync(path.join(migrationsDir, file), 'utf-8'));
+  }
   const insert = db.prepare('INSERT INTO decodeurs (numero_serie, statut) VALUES (?, ?)');
   for (const [numeroSerie, statut] of rows) insert.run(numeroSerie, statut || 'en_stock');
   setDbForTests(db);
@@ -82,4 +81,24 @@ test("RG-04: un import sans aucune correspondance reste trace dans l'historique"
   const row = db.prepare('SELECT * FROM imports WHERE nom_fichier = ?').get('rapport-vide.xlsx');
   assert.ok(row, "l'import doit laisser une ligne dans imports même sans correspondance");
   assert.equal(row.nb_trouves, 0);
+});
+
+test('nb_actives stocke le nombre reellement active par CET import, distinct de nb_trouves', () => {
+  // Un numero deja "active" avant cet import (idempotent, ne compte pas dans nb_actives)
+  // et un numero "vendu" qui, lui, bascule reellement en "active" par cet import.
+  const db = creerBaseAvecDecodeurs([
+    ['24510281903031', 'active'],
+    ['24510284163959', 'vendu'],
+  ]);
+  const importService = chargerImportService();
+
+  const buffer = classeurBuffer(['24510281903031', '24510284163959']);
+  const res = importService.importer({ buffer, nomFichier: 'rapport-mixte.xlsx' });
+
+  assert.equal(res.nbTrouvesEnBase, 2); // les deux sont connus en base
+  assert.equal(res.nbActives, 1); // un seul reellement active par CET import
+
+  const row = db.prepare('SELECT * FROM imports WHERE nom_fichier = ?').get('rapport-mixte.xlsx');
+  assert.equal(row.nb_trouves, 2);
+  assert.equal(row.nb_actives, 1, 'nb_actives ne doit pas etre confondu avec nb_trouves');
 });
