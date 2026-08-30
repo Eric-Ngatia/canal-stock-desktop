@@ -71,3 +71,16 @@ test("lister() calcule atteint/realise/pourcentage par mois a partir des vraies 
   assert.equal(fevrier.pourcentage, 20);
   assert.equal(fevrier.atteint, false);
 });
+
+test('supprimer() retire un objectif de la liste sans toucher aux autres', () => {
+  const db = creerBaseTest();
+  const objectifsService = chargerObjectifsService();
+
+  objectifsService.definir({ mois: 3, annee: 2026, cible: 200 });
+  const { id } = objectifsService.definir({ mois: 4, annee: 2026, cible: 300 });
+
+  objectifsService.supprimer(id);
+
+  const restants = db.prepare('SELECT mois, annee FROM objectifs ORDER BY mois').all();
+  assert.deepEqual(restants, [{ mois: 3, annee: 2026 }]);
+});

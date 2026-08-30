@@ -49,6 +49,7 @@ function enregistrerHandlers() {
   ipcMain.handle('canal:objectifs:definir', (_e, payload) => objectifsService.definir(payload));
   ipcMain.handle('canal:objectifs:lister', () => objectifsService.lister());
   ipcMain.handle('canal:objectifs:courant', () => objectifsService.courant());
+  ipcMain.handle('canal:objectifs:supprimer', (_e, id) => objectifsService.supprimer(id));
 
   // Export / sauvegarde (RG-08)
   ipcMain.handle('canal:export:choisirDossier', async () => {

@@ -31,6 +31,7 @@ contextBridge.exposeInMainWorld('api', {
     definir: (payload) => ipcRenderer.invoke('canal:objectifs:definir', payload),
     lister: () => ipcRenderer.invoke('canal:objectifs:lister'),
     courant: () => ipcRenderer.invoke('canal:objectifs:courant'),
+    supprimer: (id) => ipcRenderer.invoke('canal:objectifs:supprimer', id),
   },
   export: {
     choisirDossier: () => ipcRenderer.invoke('canal:export:choisirDossier'),

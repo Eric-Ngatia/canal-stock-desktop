@@ -35,6 +35,7 @@ export const objectifsApi = {
   definir: (payload) => api.objectifs.definir(payload),
   lister: () => api.objectifs.lister(),
   courant: () => api.objectifs.courant(),
+  supprimer: (id) => api.objectifs.supprimer(id),
 };
 
 export const exportApi = {

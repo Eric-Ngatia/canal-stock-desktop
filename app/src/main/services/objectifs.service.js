@@ -74,4 +74,9 @@ function courant() {
   };
 }
 
-module.exports = { definir, lister, courant, realiseDuMois };
+function supprimer(id) {
+  const db = getDb();
+  db.prepare('DELETE FROM objectifs WHERE id = ?').run(id);
+}
+
+module.exports = { definir, lister, courant, realiseDuMois, supprimer };

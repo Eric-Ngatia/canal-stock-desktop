@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Flag, CheckCircle2, PieChart, Hourglass, Check, X } from 'lucide-react';
+import { Flag, CheckCircle2, PieChart, Hourglass, Check, X, Pencil, Trash2 } from 'lucide-react';
 import { objectifsApi } from '../api/bridge.js';
 
 const MOIS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
@@ -24,6 +24,7 @@ export default function Objectifs() {
   const [mois, setMois] = useState(now.getMonth() + 1);
   const [annee, setAnnee] = useState(now.getFullYear());
   const [cible, setCible] = useState('');
+  const [editId, setEditId] = useState(null);
 
   const charger = () => {
     objectifsApi.lister().then(setHistorique);
@@ -39,6 +40,26 @@ export default function Objectifs() {
     if (!cible) return;
     await objectifsApi.definir({ mois, annee, cible: Number(cible) });
     setCible('');
+    setEditId(null);
+    charger();
+  };
+
+  const modifier = (h) => {
+    setEditId(h.id);
+    setMois(h.mois);
+    setAnnee(h.annee);
+    setCible(String(h.cible));
+  };
+
+  const annulerEdition = () => {
+    setEditId(null);
+    setCible('');
+  };
+
+  const supprimer = async (h) => {
+    if (!window.confirm(`Supprimer l'objectif de ${MOIS[h.mois - 1]} ${h.annee} ? Cette action est irréversible.`)) return;
+    await objectifsApi.supprimer(h.id);
+    if (editId === h.id) annulerEdition();
     charger();
   };
 
@@ -76,8 +97,13 @@ export default function Objectifs() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
         {/* Formulaire */}
         <div className="lg:col-span-1 bg-surface-container-lowest border border-border-color rounded-lg shadow-level-1 p-5 h-fit">
-          <h3 className="font-subtitle text-subtitle text-on-surface mb-6 border-b border-border-color pb-3">
-            Définir un objectif
+          <h3 className="font-subtitle text-subtitle text-on-surface mb-6 border-b border-border-color pb-3 flex items-center justify-between">
+            {editId ? 'Modifier un objectif' : 'Définir un objectif'}
+            {editId && (
+              <button type="button" onClick={annulerEdition} className="text-xs font-normal text-secondary hover:text-on-surface underline">
+                Annuler
+              </button>
+            )}
           </h3>
           <form onSubmit={enregistrer} className="flex flex-col gap-4">
             <div className="grid grid-cols-2 gap-4">
@@ -117,7 +143,7 @@ export default function Objectifs() {
               type="submit"
               className="mt-2 w-full h-10 bg-primary text-on-primary rounded font-subtitle text-subtitle hover:bg-primary-container transition-colors"
             >
-              Enregistrer
+              {editId ? 'Mettre à jour' : 'Enregistrer'}
             </button>
           </form>
         </div>
@@ -131,15 +157,16 @@ export default function Objectifs() {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-table-header-bg border-b border-border-color text-label-metadata font-label-metadata text-secondary uppercase tracking-wider">
-                  <th className="py-3 px-4 w-1/4">Mois</th>
-                  <th className="py-3 px-4 w-1/4">Année</th>
-                  <th className="py-3 px-4 w-1/4">Objectif</th>
-                  <th className="py-3 px-4 w-1/4 text-center">Statut</th>
+                  <th className="py-3 px-4">Mois</th>
+                  <th className="py-3 px-4">Année</th>
+                  <th className="py-3 px-4">Objectif</th>
+                  <th className="py-3 px-4 text-center">Statut</th>
+                  <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="font-body-table text-body-table text-on-surface">
                 {historique.map((h) => (
-                  <tr key={h.id} className="border-b border-border-color h-12 hover:bg-table-hover-bg transition-colors">
+                  <tr key={h.id} className={`border-b border-border-color h-12 hover:bg-table-hover-bg transition-colors ${editId === h.id ? 'bg-secondary-container' : ''}`}>
                     <td className="py-2 px-4">{MOIS[h.mois - 1]}</td>
                     <td className="py-2 px-4 tabular-nums">{h.annee}</td>
                     <td className="py-2 px-4 font-mono tabular-nums">{h.cible}</td>
@@ -153,11 +180,29 @@ export default function Objectifs() {
                         {h.atteint ? <Check size={14} /> : <X size={14} />}
                       </div>
                     </td>
+                    <td className="py-2 px-4">
+                      <div className="flex items-center justify-end gap-1">
+                        <button
+                          onClick={() => modifier(h)}
+                          className="text-secondary hover:text-primary hover:bg-surface-container-low p-1.5 rounded-full transition-colors"
+                          title="Modifier cet objectif"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={() => supprimer(h)}
+                          className="text-secondary hover:text-status-red-text hover:bg-status-red-bg p-1.5 rounded-full transition-colors"
+                          title="Supprimer cet objectif"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
                 {historique.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="text-center py-6 text-secondary">
+                    <td colSpan={5} className="text-center py-6 text-secondary">
                       Aucun objectif défini
                     </td>
                   </tr>
