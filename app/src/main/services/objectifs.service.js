@@ -13,19 +13,13 @@ function definir({ mois, annee, cible }) {
   return db.prepare('SELECT * FROM objectifs WHERE mois = ? AND annee = ?').get(mois, annee);
 }
 
-function lister() {
+/**
+ * Nombre de décodeurs vendus (statut vendu ou active, donc au moins vendus) sur un mois donné.
+ * Factorisé pour être utilisé aussi bien par `courant()` (mois en cours) que par `lister()`
+ * (chaque mois historique, pour savoir si son objectif a été atteint).
+ */
+function realiseDuMois(mois, annee) {
   const db = getDb();
-  return db.prepare('SELECT * FROM objectifs ORDER BY annee DESC, mois DESC').all();
-}
-
-function courant() {
-  const db = getDb();
-  const now = new Date();
-  const mois = now.getMonth() + 1;
-  const annee = now.getFullYear();
-
-  const objectif = db.prepare('SELECT * FROM objectifs WHERE mois = ? AND annee = ?').get(mois, annee);
-
   const debutMois = `${annee}-${String(mois).padStart(2, '0')}-01`;
   const finMois =
     mois === 12
@@ -39,7 +33,37 @@ function courant() {
     )
     .get(debutMois, finMois);
 
+  return realise;
+}
+
+/**
+ * Historique des objectifs, enrichi du réalisé/taux/atteinte de CHAQUE mois (pas seulement le
+ * mois en cours) — nécessaire pour afficher un statut "atteint/non atteint" honnête par ligne.
+ */
+function lister() {
+  const db = getDb();
+  const objectifs = db.prepare('SELECT * FROM objectifs ORDER BY annee DESC, mois DESC').all();
+
+  return objectifs.map((o) => {
+    const realise = realiseDuMois(o.mois, o.annee);
+    return {
+      ...o,
+      realise,
+      pourcentage: o.cible ? Math.round((realise / o.cible) * 100) : 0,
+      atteint: o.cible > 0 && realise >= o.cible,
+    };
+  });
+}
+
+function courant() {
+  const db = getDb();
+  const now = new Date();
+  const mois = now.getMonth() + 1;
+  const annee = now.getFullYear();
+
+  const objectif = db.prepare('SELECT * FROM objectifs WHERE mois = ? AND annee = ?').get(mois, annee);
   const cible = objectif?.cible || 0;
+  const realise = realiseDuMois(mois, annee);
 
   return {
     mois,
@@ -50,4 +74,4 @@ function courant() {
   };
 }
 
-module.exports = { definir, lister, courant };
+module.exports = { definir, lister, courant, realiseDuMois };

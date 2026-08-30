@@ -42,3 +42,32 @@ test('RG-06: la contrainte UNIQUE(mois, annee) protege meme sans passer par le s
     db.prepare('INSERT INTO objectifs (mois, annee, cible) VALUES (?, ?, ?)').run(7, 2026, 999);
   }, /UNIQUE/);
 });
+
+test("lister() calcule atteint/realise/pourcentage par mois a partir des vraies ventes, pas seulement le mois en cours", () => {
+  const db = creerBaseTest();
+  const objectifsService = chargerObjectifsService();
+
+  // Mois 1 (annee 2026) : cible 2, 2 ventes reelles -> atteint.
+  objectifsService.definir({ mois: 1, annee: 2026, cible: 2 });
+  // Mois 2 (annee 2026) : cible 5, 1 seule vente reelle -> non atteint.
+  objectifsService.definir({ mois: 2, annee: 2026, cible: 5 });
+
+  const insererVendu = db.prepare(
+    "INSERT INTO decodeurs (numero_serie, statut, date_vente) VALUES (?, 'vendu', ?)"
+  );
+  insererVendu.run('S1', '2026-01-05');
+  insererVendu.run('S2', '2026-01-20');
+  insererVendu.run('S3', '2026-02-10');
+
+  const lignes = objectifsService.lister();
+  const janvier = lignes.find((l) => l.mois === 1 && l.annee === 2026);
+  const fevrier = lignes.find((l) => l.mois === 2 && l.annee === 2026);
+
+  assert.equal(janvier.realise, 2);
+  assert.equal(janvier.pourcentage, 100);
+  assert.equal(janvier.atteint, true);
+
+  assert.equal(fevrier.realise, 1);
+  assert.equal(fevrier.pourcentage, 20);
+  assert.equal(fevrier.atteint, false);
+});
