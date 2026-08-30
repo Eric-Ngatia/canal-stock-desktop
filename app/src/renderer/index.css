@@ -1,0 +1,15 @@
+/* Police auto-hébergée (RG-07 : zéro dépendance réseau, jamais Google Fonts CDN). */
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.tabular-nums { font-variant-numeric: tabular-nums; }
+
+/* Code couleur de statut décodeur — tokens du design system "Precision Logistics". */
+.row-en_stock { background-color: #ffffff; }
+.row-vendu    { background-color: #fff7ed; }
+.row-active   { background-color: #f0fdf4; }

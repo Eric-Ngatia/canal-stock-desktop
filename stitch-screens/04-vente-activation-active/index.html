@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Canal+ Ops - Vente &amp; Activation</title>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with custom config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "primary-fixed": "#e2dfff",
+                        "surface-container-low": "#f6f2f7",
+                        "error-container": "#ffdad6",
+                        "on-surface-variant": "#464555",
+                        "on-primary-container": "#dad7ff",
+                        "background": "#fcf8fc",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "on-secondary-fixed": "#1a1b24",
+                        "primary-container": "#4f46e5",
+                        "on-secondary-container": "#63636e",
+                        "on-tertiary": "#ffffff",
+                        "on-secondary-fixed-variant": "#454650",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "secondary-container": "#e3e1ee",
+                        "surface-container-highest": "#e4e1e6",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-container": "#a44100",
+                        "on-primary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f3f0f4",
+                        "surface-container-high": "#eae7eb",
+                        "on-surface": "#1b1b1e",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary-fixed": "#e3e1ee",
+                        "on-tertiary-container": "#ffd2be",
+                        "inverse-surface": "#303033",
+                        "surface": "#fcf8fc",
+                        "secondary-fixed-dim": "#c6c5d2",
+                        "surface-container": "#f0edf1",
+                        "on-background": "#1b1b1e",
+                        "surface-dim": "#dcd9dd",
+                        "outline-variant": "#c7c4d8",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed": "#ffdbcc",
+                        "tertiary": "#7e3000",
+                        "surface-tint": "#4d44e3",
+                        "secondary": "#5d5d68",
+                        "surface-variant": "#e4e1e6",
+                        "outline": "#777587",
+                        "on-primary-fixed": "#0f0069",
+                        "surface-bright": "#fcf8fc",
+                        "primary": "#3525cd",
+                        "inverse-primary": "#c3c0ff",
+                        "status-active": "#16A34A"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "container_max_width": "1440px",
+                        "margin_mobile": "16px",
+                        "gutter": "16px",
+                        "base_unit": "4px",
+                        "margin_desktop": "24px"
+                    },
+                    "fontFamily": {
+                        "key-value": ["Inter"],
+                        "subtitle": ["Inter"],
+                        "label-metadata": ["Inter"],
+                        "page-title": ["Inter"],
+                        "body-table": ["Inter"]
+                    },
+                    "fontSize": {
+                        "key-value": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "subtitle": ["16px", { "lineHeight": "24px", "fontWeight": "500" }],
+                        "label-metadata": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "page-title": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-table": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface font-body-table antialiased min-h-screen">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-inverse-surface fixed left-0 top-0 h-full w-[240px] border-r border-outline-variant flex flex-col py-6 z-20">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-primary font-bold text-xl">C</div>
+<div>
+<h1 class="font-page-title text-page-title font-bold text-primary dark:text-primary-fixed">Canal+ Ops</h1>
+<p class="font-label-metadata text-label-metadata text-secondary">Hardware Manager</p>
+</div>
+</div>
+<ul class="flex flex-col gap-2 flex-grow px-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                    Stock
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-primary dark:text-primary-fixed bg-secondary-container/50 dark:bg-primary/20 border-l-4 border-primary hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="point_of_sale" data-weight="fill" style="font-variation-settings: 'FILL' 1;">point_of_sale</span>
+                    Vente &amp; Activation
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="upload_file">upload_file</span>
+                    Import
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                    Apporteurs
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                    Objectifs
+                </a>
+</li>
+</ul>
+<div class="mt-auto px-2 border-t border-outline-variant pt-4">
+<ul class="flex flex-col gap-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                        Settings
+                    </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform font-subtitle text-subtitle" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+                        Support
+                    </a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface fixed top-0 h-16 border-b border-outline-variant flex justify-between items-center px-6 ml-[240px] w-[calc(100%-240px)] z-10">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96 hidden md:block group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full h-10 pl-10 pr-4 bg-surface-container-low border border-transparent rounded-lg text-body-table focus:border-primary focus:bg-surface-container-lowest focus:ring-2 focus:ring-primary/10 transition-all outline-none text-on-surface" placeholder="Rechercher des numéros de série..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border border-surface-container-lowest"></span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="h-8 w-px bg-outline-variant mx-2"></div>
+<img alt="Manager profile" class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="A professional headshot of a corporate hardware manager in a minimalist office setting, light mode aesthetic, bright and clean." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQWZNHskSW6--O1cAhaZ503UWIugFNo1siE4WxHTDzS37OY74ShntvAE7lt7AQ1wDm80msM_0qctUWB__KSVoj_5BW66XwjFBpfwgCKAAlvpqy0dk9zvtxIpCzsMRBCY2YJVZX5431EfXqLLTW0g_YpgecqU6wHDuZwLS-6zDSJV93EfK7DkaZGBaw8Wyy2UqLsZf--iS4VrYfnLsLmbQx77PB3ZaU0XDF91scecplwAnuKt-Aank7"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-[240px] pt-16 min-h-screen">
+<div class="max-w-container_max_width mx-auto p-margin_desktop flex flex-col gap-8">
+<!-- Header Section -->
+<div class="flex items-center justify-between">
+<div>
+<h2 class="font-page-title text-page-title text-on-surface">Traitement en Masse</h2>
+<p class="font-body-table text-body-table text-secondary mt-1">Gérez le statut de vos équipements par lots.</p>
+</div>
+</div>
+<!-- Tab Navigation -->
+<div class="flex border-b border-outline-variant mb-4">
+<a class="px-6 py-3 font-subtitle text-subtitle text-secondary hover:text-on-surface transition-colors" href="#">
+                    Marquer comme vendu
+                </a>
+<a class="px-6 py-3 font-subtitle text-subtitle text-status-active border-b-2 border-status-active" href="#">
+                    Marquer comme activé
+                </a>
+</div>
+<!-- Content Area -->
+<div class="flex justify-center w-full mt-4">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm p-8 w-full max-w-[600px]">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+<div class="w-10 h-10 rounded-full bg-status-active/10 flex items-center justify-center text-status-active">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div>
+<h3 class="font-subtitle text-subtitle text-on-surface">Activation des équipements</h3>
+<p class="font-label-metadata text-label-metadata text-secondary mt-1">Saisissez les numéros de série et la date.</p>
+</div>
+</div>
+<form class="flex flex-col gap-6">
+<!-- Textarea -->
+<div class="flex flex-col gap-2">
+<label class="font-subtitle text-subtitle text-on-surface flex justify-between items-end">
+                                Numéros de série à activer
+                                <span class="font-label-metadata text-label-metadata text-secondary font-normal">1 numéro par ligne</span>
+</label>
+<textarea class="w-full border border-outline-variant rounded-lg p-3 text-on-surface bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all font-mono text-[14px] leading-5 resize-none" placeholder="043298471203
+043298471204
+043298471205" rows="8" style="font-variant-numeric: tabular-nums;"></textarea>
+<div class="flex justify-between items-center mt-1">
+<p class="font-label-metadata text-label-metadata text-secondary">0 ligne(s) détectée(s)</p>
+</div>
+</div>
+<!-- Date Field -->
+<div class="flex flex-col gap-2">
+<label class="font-subtitle text-subtitle text-on-surface">
+                                Date d'activation
+                            </label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">calendar_today</span>
+<input class="w-full h-10 pl-10 pr-4 border border-outline-variant rounded-lg text-on-surface bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/10 transition-all" type="date" value="2023-10-25"/>
+</div>
+</div>
+<!-- Action Button -->
+<button class="mt-4 w-full h-12 bg-status-active text-white rounded-lg font-subtitle text-subtitle font-semibold hover:bg-status-active/90 active:scale-[0.99] transition-all flex items-center justify-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">power</span>
+                            Marquer comme activé
+                        </button>
+</form>
+</div>
+</div>
+</div>
+</main>
+</body></html>

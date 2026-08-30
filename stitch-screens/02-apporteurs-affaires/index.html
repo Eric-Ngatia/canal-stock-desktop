@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Canal+ Stock - Apporteurs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-high": "#eae7eb",
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "on-tertiary": "#ffffff",
+                      "surface-tint": "#4d44e3",
+                      "inverse-primary": "#c3c0ff",
+                      "outline": "#777587",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "on-primary": "#ffffff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "on-tertiary-container": "#ffd2be",
+                      "on-surface": "#1b1b1e",
+                      "on-secondary": "#ffffff",
+                      "primary": "#3525cd",
+                      "background": "#fcf8fc",
+                      "inverse-on-surface": "#f3f0f4",
+                      "secondary-fixed-dim": "#c6c5d2",
+                      "on-secondary-fixed": "#1a1b24",
+                      "surface-dim": "#dcd9dd",
+                      "surface-container-lowest": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "error-container": "#ffdad6",
+                      "surface-container-highest": "#e4e1e6",
+                      "surface": "#fcf8fc",
+                      "primary-container": "#4f46e5",
+                      "on-surface-variant": "#464555",
+                      "on-error": "#ffffff",
+                      "error": "#ba1a1a",
+                      "tertiary": "#7e3000",
+                      "inverse-surface": "#303033",
+                      "outline-variant": "#c7c4d8",
+                      "surface-bright": "#fcf8fc",
+                      "primary-fixed": "#e2dfff",
+                      "on-background": "#1b1b1e",
+                      "on-secondary-fixed-variant": "#454650",
+                      "tertiary-fixed": "#ffdbcc",
+                      "on-tertiary-fixed": "#351000",
+                      "surface-container-low": "#f6f2f7",
+                      "on-secondary-container": "#63636e",
+                      "surface-variant": "#e4e1e6",
+                      "secondary": "#5d5d68",
+                      "secondary-fixed": "#e3e1ee",
+                      "on-primary-container": "#dad7ff",
+                      "surface-container": "#f0edf1",
+                      "on-primary-fixed": "#0f0069",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "secondary-container": "#e3e1ee",
+                      "tertiary-container": "#a44100"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "margin_desktop": "24px",
+                      "margin_mobile": "16px",
+                      "gutter": "16px",
+                      "base_unit": "4px",
+                      "container_max_width": "1440px"
+              },
+              "fontFamily": {
+                      "body-table": ["Inter"],
+                      "subtitle": ["Inter"],
+                      "page-title": ["Inter"],
+                      "label-metadata": ["Inter"],
+                      "key-value": ["Inter"]
+              },
+              "fontSize": {
+                      "body-table": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "subtitle": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                      "page-title": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-metadata": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                      "key-value": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .table-row-hover:hover .delete-icon { opacity: 1; visibility: visible; }
+        .delete-icon { opacity: 0; visibility: hidden; transition: opacity 0.2s ease-in-out; }
+    </style>
+</head>
+<body class="bg-[#F5F5F7] min-h-screen text-on-surface font-body-table flex antialiased">
+<!-- SideNavBar -->
+<nav class="w-[240px] h-screen fixed left-0 top-0 bg-surface border-r border-outline-variant flex flex-col py-6 z-20">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container flex items-center justify-center text-on-primary font-bold">C+</div>
+<div>
+<h1 class="font-page-title text-page-title text-primary">Canal+ Stock</h1>
+<p class="font-label-metadata text-label-metadata text-on-surface-variant">Management Portal</p>
+</div>
+</div>
+<div class="px-4 mb-6">
+<button class="w-full bg-primary-container text-on-primary h-10 rounded font-subtitle text-subtitle flex items-center justify-center gap-2 hover:bg-surface-tint transition-colors">
+<span class="material-symbols-outlined text-[20px]">add</span>
+                New Entry
+            </button>
+</div>
+<div class="flex-1 px-3 space-y-1 overflow-y-auto">
+<!-- Tabs -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+                Stock
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">cell_tower</span>
+                Vente &amp; Activation
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+                Import
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-primary bg-secondary-fixed border-l-4 border-primary hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">groups</span>
+                Apporteurs
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors active:scale-95 duration-150" href="#">
+<span class="material-symbols-outlined text-[20px]">target</span>
+                Objectifs
+            </a>
+</div>
+<div class="px-3 mt-auto space-y-1 pt-4 border-t border-outline-variant mx-3">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded font-subtitle text-subtitle text-on-surface-variant hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Area Wrapper -->
+<div class="ml-[240px] flex-1 flex flex-col min-h-screen">
+<!-- TopNavBar -->
+<header class="h-16 w-full bg-surface-container-lowest border-b border-[#E5E5EA] flex justify-between items-center px-6 sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<h2 class="font-subtitle text-subtitle font-semibold text-on-surface">Apporteurs d'affaires</h2>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+<input class="h-10 pl-10 pr-4 rounded bg-surface-container-lowest border border-[#E5E5EA] text-[14px] focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 transition-all w-64 focus:w-80 outline-none text-on-surface placeholder:text-outline" placeholder="Search..." type="text"/>
+</div>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center transition-all duration-200 text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full hover:bg-surface-container flex items-center justify-center transition-all duration-200 text-on-surface-variant">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center overflow-hidden border border-[#E5E5EA]">
+<span class="material-symbols-outlined text-on-surface-variant">person</span>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 p-margin_desktop max-w-[1440px] mx-auto w-full">
+<!-- Add Apporteur Form Card -->
+<section class="bg-[#FFFFFF] border border-[#E5E5EA] rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] p-5 mb-6">
+<form class="flex flex-col md:flex-row items-end gap-4">
+<div class="flex-1 w-full">
+<label class="block font-label-metadata text-label-metadata text-on-surface-variant mb-1 uppercase" for="nom">Nom</label>
+<input class="w-full h-10 px-3 rounded border border-[#E5E5EA] focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all font-body-table text-body-table text-on-surface placeholder:text-outline" id="nom" placeholder="Ex: Jean Dupont" type="text"/>
+</div>
+<div class="flex-1 w-full">
+<label class="block font-label-metadata text-label-metadata text-on-surface-variant mb-1 uppercase" for="telephone">Téléphone</label>
+<input class="w-full h-10 px-3 rounded border border-[#E5E5EA] focus:border-primary-container focus:ring-2 focus:ring-primary-container/10 outline-none transition-all font-body-table text-body-table text-on-surface placeholder:text-outline" id="telephone" placeholder="Ex: +225 0102030405" type="text"/>
+</div>
+<button class="h-10 px-6 rounded bg-primary-container text-on-primary font-subtitle text-subtitle hover:bg-surface-tint transition-colors flex items-center gap-2 whitespace-nowrap mt-4 md:mt-0" type="button">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                        Ajouter
+                    </button>
+</form>
+</section>
+<!-- Data Table Card -->
+<section class="bg-[#FFFFFF] border border-[#E5E5EA] rounded-lg shadow-[0_1px_3px_rgba(0,0,0,0.05)] overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#F9F9FB] border-b border-[#E5E5EA]">
+<th class="py-3 px-4 font-label-metadata text-label-metadata text-on-surface-variant uppercase tracking-wider">Nom</th>
+<th class="py-3 px-4 font-label-metadata text-label-metadata text-on-surface-variant uppercase tracking-wider">Téléphone</th>
+<th class="py-3 px-4 font-label-metadata text-label-metadata text-on-surface-variant uppercase tracking-wider text-right">Ventes</th>
+<th class="py-3 px-4 font-label-metadata text-label-metadata text-on-surface-variant uppercase tracking-wider text-right">Activés</th>
+<th class="py-3 px-4 font-label-metadata text-label-metadata text-on-surface-variant uppercase tracking-wider text-right">Commissions dues</th>
+<th class="py-3 px-4 w-12"></th> <!-- For delete icon -->
+</tr>
+</thead>
+<tbody class="font-body-table text-body-table">
+<!-- Top Performer Row -->
+<tr class="border-b border-[#E5E5EA] h-[48px] table-row-hover bg-[#ECFDF5] hover:bg-[#D1FAE5] transition-colors">
+<td class="py-2 px-4 text-on-surface font-medium">Kouassi Marc</td>
+<td class="py-2 px-4 text-on-surface-variant tabular-nums">+225 0707070707</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">145</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">142</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right font-bold">142 000 FCFA</td>
+<td class="py-2 px-4 text-right">
+<button class="delete-icon text-error hover:bg-error-container p-1 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Standard Row -->
+<tr class="border-b border-[#E5E5EA] h-[48px] table-row-hover hover:bg-[#F9F9FB] transition-colors">
+<td class="py-2 px-4 text-on-surface">Touré Amadou</td>
+<td class="py-2 px-4 text-on-surface-variant tabular-nums">+225 0505050505</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">89</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">85</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right font-bold">85 000 FCFA</td>
+<td class="py-2 px-4 text-right">
+<button class="delete-icon text-error hover:bg-error-container p-1 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Row with Badge -->
+<tr class="border-b border-[#E5E5EA] h-[48px] table-row-hover hover:bg-[#F9F9FB] transition-colors">
+<td class="py-2 px-4 text-on-surface flex items-center gap-2">
+                                    Diomandé Sarah
+                                    <span class="bg-[#F5F5F7] text-[#6B6B76] text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded">Non enregistré</span>
+</td>
+<td class="py-2 px-4 text-on-surface-variant tabular-nums">+225 0101010101</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">42</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">40</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right font-bold">40 000 FCFA</td>
+<td class="py-2 px-4 text-right">
+<button class="delete-icon text-error hover:bg-error-container p-1 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Top Performer Row -->
+<tr class="border-b border-[#E5E5EA] h-[48px] table-row-hover bg-[#ECFDF5] hover:bg-[#D1FAE5] transition-colors">
+<td class="py-2 px-4 text-on-surface font-medium">Bamba Ali</td>
+<td class="py-2 px-4 text-on-surface-variant tabular-nums">+225 0909090909</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">120</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">118</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right font-bold">118 000 FCFA</td>
+<td class="py-2 px-4 text-right">
+<button class="delete-icon text-error hover:bg-error-container p-1 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+<!-- Standard Row -->
+<tr class="border-b border-[#E5E5EA] h-[48px] table-row-hover hover:bg-[#F9F9FB] transition-colors">
+<td class="py-2 px-4 text-on-surface">Kone Awa</td>
+<td class="py-2 px-4 text-on-surface-variant tabular-nums">+225 0303030303</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">15</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right">12</td>
+<td class="py-2 px-4 text-on-surface tabular-nums text-right font-bold">12 000 FCFA</td>
+<td class="py-2 px-4 text-right">
+<button class="delete-icon text-error hover:bg-error-container p-1 rounded-full flex items-center justify-center transition-colors">
+<span class="material-symbols-outlined text-[18px]">delete</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+</div>
+</body></html>

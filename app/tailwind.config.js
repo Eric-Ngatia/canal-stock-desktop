@@ -1,0 +1,66 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ['./src/renderer/index.html', './src/renderer/**/*.{js,jsx}'],
+  theme: {
+    extend: {
+      // Design system "Precision Logistics" (Stitch) — voir stitch-screens/00-design-system.
+      colors: {
+        primary: '#3525cd',
+        'primary-container': '#4f46e5',
+        'on-primary': '#ffffff',
+        secondary: '#5d5d68',
+        'secondary-container': '#e3e1ee',
+        background: '#f5f5f7',
+        surface: '#fcf8fc',
+        'surface-container-lowest': '#ffffff',
+        'surface-container-low': '#f6f2f7',
+        'surface-container': '#f0edf1',
+        'surface-container-high': '#eae7eb',
+        'on-surface': '#1b1b1e',
+        'on-surface-variant': '#464555',
+        outline: '#777587',
+        'outline-variant': '#c7c4d8',
+        'border-color': '#e5e5ea',
+        'table-header-bg': '#f9f9fb',
+        'table-hover-bg': '#f5f5f7',
+        'status-gray-bg': '#f3f4f6',
+        'status-gray-text': '#6b6b76',
+        'status-orange-bg': '#fff7ed',
+        'status-orange-text': '#f97316',
+        'status-green-bg': '#f0fdf4',
+        'status-green-text': '#16a34a',
+        'status-red-bg': '#fef2f2',
+        'status-red-text': '#dc2626',
+      },
+      borderRadius: {
+        DEFAULT: '0.25rem',
+        lg: '0.5rem',
+        xl: '0.75rem',
+        full: '9999px',
+      },
+      spacing: {
+        base_unit: '4px',
+        gutter: '16px',
+        margin_mobile: '16px',
+        margin_desktop: '24px',
+        container_max_width: '1440px',
+      },
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        'body-table': ['14px', { lineHeight: '20px', fontWeight: '400' }],
+        'page-title': ['20px', { lineHeight: '28px', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'label-metadata': ['12px', { lineHeight: '16px', letterSpacing: '0.05em', fontWeight: '500' }],
+        subtitle: ['16px', { lineHeight: '24px', fontWeight: '500' }],
+        'key-value': ['28px', { lineHeight: '34px', letterSpacing: '-0.02em', fontWeight: '600' }],
+      },
+      boxShadow: {
+        'level-1': '0 1px 3px rgba(0,0,0,0.05)',
+        'level-2': '0 10px 15px -3px rgba(0,0,0,0.1)',
+      },
+    },
+  },
+  plugins: [require('daisyui')],
+  daisyui: { themes: ['corporate'] },
+};

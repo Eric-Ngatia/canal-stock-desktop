@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Canal+ Ops - Import</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary-fixed-variant": "#7b2f00",
+                      "primary-fixed": "#e2dfff",
+                      "surface-container-low": "#f6f2f7",
+                      "error-container": "#ffdad6",
+                      "on-surface-variant": "#464555",
+                      "on-primary-container": "#dad7ff",
+                      "background": "#fcf8fc",
+                      "primary-fixed-dim": "#c3c0ff",
+                      "tertiary-fixed-dim": "#ffb695",
+                      "on-secondary-fixed": "#1a1b24",
+                      "primary-container": "#4f46e5",
+                      "on-secondary-container": "#63636e",
+                      "on-tertiary": "#ffffff",
+                      "on-secondary-fixed-variant": "#454650",
+                      "on-primary-fixed-variant": "#3323cc",
+                      "secondary-container": "#e3e1ee",
+                      "surface-container-highest": "#e4e1e6",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-container": "#a44100",
+                      "on-primary": "#ffffff",
+                      "error": "#ba1a1a",
+                      "inverse-on-surface": "#f3f0f4",
+                      "surface-container-high": "#eae7eb",
+                      "on-surface": "#1b1b1e",
+                      "on-secondary": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed": "#351000",
+                      "secondary-fixed": "#e3e1ee",
+                      "on-tertiary-container": "#ffd2be",
+                      "inverse-surface": "#303033",
+                      "surface": "#fcf8fc",
+                      "secondary-fixed-dim": "#c6c5d2",
+                      "surface-container": "#f0edf1",
+                      "on-background": "#1b1b1e",
+                      "surface-dim": "#dcd9dd",
+                      "outline-variant": "#c7c4d8",
+                      "on-error": "#ffffff",
+                      "tertiary-fixed": "#ffdbcc",
+                      "tertiary": "#7e3000",
+                      "surface-tint": "#4d44e3",
+                      "secondary": "#5d5d68",
+                      "surface-variant": "#e4e1e6",
+                      "outline": "#777587",
+                      "on-primary-fixed": "#0f0069",
+                      "surface-bright": "#fcf8fc",
+                      "primary": "#3525cd",
+                      "inverse-primary": "#c3c0ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "container_max_width": "1440px",
+                      "margin_mobile": "16px",
+                      "gutter": "16px",
+                      "base_unit": "4px",
+                      "margin_desktop": "24px"
+              },
+              "fontFamily": {
+                      "key-value": [
+                              "Inter"
+                      ],
+                      "subtitle": [
+                              "Inter"
+                      ],
+                      "label-metadata": [
+                              "Inter"
+                      ],
+                      "page-title": [
+                              "Inter"
+                      ],
+                      "body-table": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "key-value": [
+                              "28px",
+                              {
+                                      "lineHeight": "34px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "subtitle": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "label-metadata": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "page-title": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-table": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            },
+          }
+        }
+    </script>
+<style>
+        .table-row-hover:hover { background-color: #F9F9FB; }
+        .table-header { border-bottom: 1px solid #E5E5EA; background-color: #F9F9FB; text-transform: uppercase; font-size: 12px; }
+        .table-cell { border-bottom: 1px solid #E5E5EA; height: 48px; }
+        .card-elevation { box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #E5E5EA; border-radius: 16px; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-subtitle min-h-screen flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-inverse-surface border-r border-outline-variant fixed left-0 top-0 h-full w-[240px] flex flex-col h-full py-6 hidden md:flex z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<img alt="User profile" class="w-8 h-8 rounded-full object-cover" data-alt="A small, professional 32x32 user avatar image of a corporate hardware manager. The background is a crisp, light modern office setting. The lighting is soft and natural, emphasizing a clean, minimal aesthetic suitable for a modern SaaS application interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCq3bn-gslUmdkvHmfzD2_-zIK3H1wF2OJxMFakcC-KWhpMIbueOARBdH0hneN4vwBlkeIYQ2tJvFNpJ6mpvQTqhFU4Eardpy_GyFnvH3fGmOU0zVgVTPVyhgmpPOWd0mc56npwsuOOVzga1UboK1SHTVWwq6Rmyvl25pfySujTnu-QOJmL6mvKEtixGI_rba85Q6sllDT48XlK2MzGH29jZB25ylXMYD5txxEn7qHofBwmnE86PiXQ"/>
+<div>
+<h1 class="font-page-title text-page-title font-bold text-primary dark:text-primary-fixed">Canal+ Ops</h1>
+<p class="font-label-metadata text-label-metadata text-secondary">Hardware Manager</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 flex-1 px-2">
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">inventory_2</span>
+                Stock
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">point_of_sale</span>
+                Vente &amp; Activation
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-primary dark:text-primary-fixed bg-secondary-container/50 dark:bg-primary/20 border-l-4 border-primary rounded-lg cursor-pointer active:scale-95 transition-transform font-medium" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">upload_file</span>
+                Import
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">group</span>
+                Apporteurs
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">analytics</span>
+                Objectifs
+            </a>
+</div>
+<div class="mt-auto px-2 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container dark:hover:bg-surface-variant transition-colors rounded-lg cursor-pointer active:scale-95 transition-transform" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help_outline</span>
+                Support
+            </a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="flex-1 ml-0 md:ml-[240px] flex flex-col w-full min-h-screen">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant docked full-width top-0 h-16 flex justify-between items-center px-6 sticky top-0 z-40">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]">search</span>
+<input class="pl-10 pr-4 py-2 rounded-lg bg-transparent border border-transparent focus:border-outline-variant focus:bg-surface-container-low transition-all outline-none text-[14px] text-on-surface w-48 focus:w-64" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-lg transition-all duration-200 ease-in-out">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help</span>
+</button>
+<div class="ml-2 pl-4 border-l border-outline-variant md:hidden">
+<img alt="Manager profile" class="w-8 h-8 rounded-full object-cover" data-alt="Small circular profile picture of a young professional manager in a light-filled office, optimized for a modern, minimalistic B2B application dashboard header." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKYLdTiN3S3St27T6UE9UYwyjARxUAxIzd-Uwirvesy-H31vEQ-lfKpNcEd1CiIbEhb5ao3dE0K_sTkb-ZKn8xlzRSwsif0sBkofAeoIK3Qa4ycT1NPvqBsqBmodDi0GoukpajKLXljoWi1oyAU2XP0vyC_3lfJiFCL538ljlMz60iWQNwQ9Z2L4qzMRPAoiAhNtn6YL4ZArLkO7ZIWQenLACHv67PTlItXJ5dPABurXPA8CF7gQ_e"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-6 md:p-[24px] max-w-[1440px] w-full mx-auto flex-1 flex flex-col gap-6">
+<div class="flex items-center justify-between mb-2">
+<h2 class="font-key-value text-key-value text-on-surface">Import Canal+</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Left Column: Upload -->
+<div class="lg:col-span-2 flex flex-col gap-6">
+<!-- Upload Card -->
+<div class="bg-surface-container-lowest card-elevation p-8 flex flex-col items-center justify-center text-center">
+<div class="w-full h-64 border-2 border-dashed border-outline-variant rounded-[16px] flex flex-col items-center justify-center bg-surface-container-low/50 hover:bg-surface-container-low transition-colors cursor-pointer mb-6 group">
+<span class="material-symbols-outlined text-[48px] text-primary/60 group-hover:text-primary transition-colors mb-4" style="font-variation-settings: 'FILL' 1;">upload_file</span>
+<p class="font-subtitle text-subtitle text-on-surface-variant mb-2">Glissez le rapport Canal+ ici ou cliquez pour parcourir</p>
+<p class="font-label-metadata text-label-metadata text-outline">Fichiers CSV acceptés uniquement.</p>
+</div>
+<button class="bg-primary-container text-on-primary px-6 py-2.5 rounded-lg font-subtitle text-subtitle hover:opacity-90 transition-opacity active:scale-[0.98] flex items-center gap-2 w-full sm:w-auto justify-center">
+                            Importer et rapprocher
+                        </button>
+</div>
+<!-- History Card -->
+<div class="bg-surface-container-lowest card-elevation overflow-hidden flex flex-col flex-1">
+<div class="p-5 border-b border-outline-variant">
+<h3 class="font-page-title text-page-title text-on-surface">Historique des imports</h3>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="table-header text-outline">
+<th class="px-5 py-3 font-label-metadata font-semibold w-1/4">Date</th>
+<th class="px-5 py-3 font-label-metadata font-semibold w-1/3">Fichier</th>
+<th class="px-5 py-3 font-label-metadata font-semibold text-right">Détectés</th>
+<th class="px-5 py-3 font-label-metadata font-semibold text-right">Activés</th>
+<th class="px-5 py-3 font-label-metadata font-semibold text-right">Non trouvés</th>
+</tr>
+</thead>
+<tbody class="font-body-table text-body-table text-on-surface-variant font-mono text-[13px]">
+<tr class="table-cell table-row-hover transition-colors">
+<td class="px-5 py-3 font-sans">12 Oct 2023, 09:41</td>
+<td class="px-5 py-3 font-sans">rapport_canal_oct.csv</td>
+<td class="px-5 py-3 text-right">124</td>
+<td class="px-5 py-3 text-right text-[#16A34A]">85</td>
+<td class="px-5 py-3 text-right text-[#F97316]">12</td>
+</tr>
+<tr class="table-cell table-row-hover transition-colors">
+<td class="px-5 py-3 font-sans">05 Oct 2023, 14:22</td>
+<td class="px-5 py-3 font-sans">rapport_canal_S40.csv</td>
+<td class="px-5 py-3 text-right">98</td>
+<td class="px-5 py-3 text-right text-[#16A34A]">70</td>
+<td class="px-5 py-3 text-right text-[#F97316]">5</td>
+</tr>
+<tr class="table-cell table-row-hover transition-colors">
+<td class="px-5 py-3 font-sans">28 Sep 2023, 08:15</td>
+<td class="px-5 py-3 font-sans">rapport_mensuel_sept.csv</td>
+<td class="px-5 py-3 text-right">310</td>
+<td class="px-5 py-3 text-right text-[#16A34A]">290</td>
+<td class="px-5 py-3 text-right text-[#F97316]">15</td>
+</tr>
+<tr class="table-cell table-row-hover transition-colors">
+<td class="px-5 py-3 font-sans">21 Sep 2023, 16:05</td>
+<td class="px-5 py-3 font-sans">rapport_hebdo.csv</td>
+<td class="px-5 py-3 text-right">45</td>
+<td class="px-5 py-3 text-right text-[#16A34A]">45</td>
+<td class="px-5 py-3 text-right">0</td>
+</tr>
+<tr class="table-cell table-row-hover transition-colors">
+<td class="px-5 py-3 font-sans">14 Sep 2023, 10:30</td>
+<td class="px-5 py-3 font-sans">canal_raw_export.csv</td>
+<td class="px-5 py-3 text-right">156</td>
+<td class="px-5 py-3 text-right text-[#16A34A]">120</td>
+<td class="px-5 py-3 text-right text-[#F97316]">22</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Right Column: Results -->
+<div class="flex flex-col gap-6">
+<div class="bg-surface-container-lowest card-elevation p-6 flex flex-col">
+<h3 class="font-page-title text-page-title text-on-surface border-b border-outline-variant pb-4 mb-6">Dernier Import</h3>
+<div class="flex flex-col gap-4">
+<!-- Metric 1 -->
+<div class="bg-surface-container-low p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-outline-variant/30 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-secondary">search</span>
+</div>
+<span class="font-subtitle text-subtitle text-on-surface">Détectés</span>
+</div>
+<span class="font-key-value text-[24px] font-mono text-on-surface">124</span>
+</div>
+<!-- Metric 2 -->
+<div class="bg-[#f0fdf4] border border-[#bbf7d0] p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#dcfce7] flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-[#16A34A]">check_circle</span>
+</div>
+<span class="font-subtitle text-subtitle text-[#14532d]">Activés</span>
+</div>
+<span class="font-key-value text-[24px] font-mono text-[#16A34A]">85</span>
+</div>
+<!-- Metric 3 -->
+<div class="bg-[#fff7ed] border border-[#fed7aa] p-4 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#ffedd5] flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-[#F97316]">error</span>
+</div>
+<span class="font-subtitle text-subtitle text-[#7c2d12]">Non trouvés</span>
+</div>
+<span class="font-key-value text-[24px] font-mono text-[#F97316]">12</span>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant">
+<p class="font-label-metadata text-label-metadata text-outline mb-2">Taux de succès</p>
+<div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden flex">
+<div class="bg-[#16A34A] h-full rounded-full" style="width: 68%;"></div>
+</div>
+<div class="flex justify-between mt-2 font-mono text-[12px] text-secondary">
+<span>68% activés</span>
+<span>124 total</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

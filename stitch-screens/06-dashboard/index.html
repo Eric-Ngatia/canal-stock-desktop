@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+
+<html class="light" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Canal+ Stock Manager - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#351000",
+                        "secondary-fixed-dim": "#c6c5d2",
+                        "on-tertiary-fixed-variant": "#7b2f00",
+                        "on-error-container": "#93000a",
+                        "inverse-surface": "#303033",
+                        "on-secondary-fixed-variant": "#454650",
+                        "error-container": "#ffdad6",
+                        "on-primary-fixed-variant": "#3323cc",
+                        "primary-fixed": "#e2dfff",
+                        "primary-container": "#4f46e5",
+                        "on-surface-variant": "#464555",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f0edf1",
+                        "background": "#F5F5F7", // Overridden for specific design request
+                        "secondary-container": "#e3e1ee",
+                        "surface-container-low": "#f6f2f7",
+                        "surface-dim": "#dcd9dd",
+                        "surface-bright": "#fcf8fc",
+                        "surface": "#F5F5F7", // Overridden for specific design request
+                        "on-primary-container": "#dad7ff",
+                        "on-secondary-container": "#63636e",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1b1b1e",
+                        "on-tertiary": "#ffffff",
+                        "on-tertiary-container": "#ffd2be",
+                        "outline": "#777587",
+                        "tertiary": "#7e3000",
+                        "inverse-primary": "#c3c0ff",
+                        "tertiary-fixed-dim": "#ffb695",
+                        "surface-variant": "#e4e1e6",
+                        "on-secondary-fixed": "#1a1b24",
+                        "outline-variant": "#c7c4d8",
+                        "surface-tint": "#4d44e3",
+                        "primary": "#3525cd",
+                        "tertiary-container": "#a44100",
+                        "on-surface": "#1b1b1e",
+                        "on-error": "#ffffff",
+                        "on-primary-fixed": "#0f0069",
+                        "error": "#ba1a1a",
+                        "secondary": "#5d5d68",
+                        "inverse-on-surface": "#f3f0f4",
+                        "surface-container-high": "#eae7eb",
+                        "secondary-fixed": "#e3e1ee",
+                        "primary-fixed-dim": "#c3c0ff",
+                        "surface-container-highest": "#e4e1e6",
+                        "tertiary-fixed": "#ffdbcc",
+                        
+                        // Adding specific badge/status colors from Style Guidance
+                        "status-orange-bg": "#fff7ed", // Light orange
+                        "status-orange-text": "#f97316",
+                        "status-green-bg": "#f0fdf4", // Light green
+                        "status-green-text": "#16a34a",
+                        "status-gray-bg": "#f3f4f6", // Light gray
+                        "status-gray-text": "#6b6b76",
+                        "status-red-bg": "#fef2f2", // Light red
+                        "status-red-text": "#dc2626",
+                        "table-header-bg": "#f9f9fb",
+                        "table-hover-bg": "#f5f5f7",
+                        "border-color": "#e5e5ea"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin_mobile": "16px",
+                        "gutter": "16px",
+                        "base_unit": "4px",
+                        "margin_desktop": "24px",
+                        "container_max_width": "1440px"
+                    },
+                    "fontFamily": {
+                        "body-table": ["Inter"],
+                        "page-title": ["Inter"],
+                        "label-metadata": ["Inter"],
+                        "subtitle": ["Inter"],
+                        "key-value": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-table": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "page-title": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-metadata": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "subtitle": ["16px", {"lineHeight": "24px", "fontWeight": "500"}],
+                        "key-value": ["28px", {"lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "600"}]
+                    },
+                    boxShadow: {
+                        'level-1': '0 1px 3px rgba(0,0,0,0.05)',
+                        'level-2': '0 10px 15px -3px rgba(0,0,0,0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Force tabular numerals for numbers */
+        .tabular-nums { font-variant-numeric: tabular-nums; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-table antialiased flex">
+<!-- JSON Sidebar Injection Placeholder -->
+    {{DATA:COMPONENTS:COMPONENTS_4}}
+
+    <!-- Main Content Area -->
+<main class="flex-1 ml-[240px] mt-16 min-h-screen">
+<div class="max-w-[1440px] mx-auto p-margin_desktop space-y-6">
+<!-- Stat Cards Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Total décodeurs -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg p-4 shadow-level-1 flex flex-col justify-between h-full">
+<span class="font-label-metadata text-label-metadata text-secondary uppercase">Total décodeurs</span>
+<span class="font-key-value text-key-value text-on-surface mt-2 tabular-nums">2,450</span>
+</div>
+<!-- En stock -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg p-4 shadow-level-1 flex flex-col justify-between h-full">
+<span class="font-label-metadata text-label-metadata text-secondary uppercase">En stock</span>
+<div class="flex items-center justify-between mt-2">
+<span class="font-key-value text-key-value text-on-surface tabular-nums">1,120</span>
+<span class="bg-status-gray-bg text-status-gray-text px-2 py-1 rounded font-label-metadata text-[10px] uppercase font-bold">Stock</span>
+</div>
+</div>
+<!-- Vendus non activés -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg p-4 shadow-level-1 flex flex-col justify-between h-full">
+<span class="font-label-metadata text-label-metadata text-secondary uppercase">Vendus non activés</span>
+<div class="flex items-center justify-between mt-2">
+<span class="font-key-value text-key-value text-on-surface tabular-nums">850</span>
+<span class="bg-status-orange-bg text-status-orange-text px-2 py-1 rounded font-label-metadata text-[10px] uppercase font-bold">Vendu</span>
+</div>
+</div>
+<!-- Activés -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg p-4 shadow-level-1 flex flex-col justify-between h-full">
+<span class="font-label-metadata text-label-metadata text-secondary uppercase">Activés</span>
+<div class="flex items-center justify-between mt-2">
+<span class="font-key-value text-key-value text-on-surface tabular-nums">480</span>
+<span class="bg-status-green-bg text-status-green-text px-2 py-1 rounded font-label-metadata text-[10px] uppercase font-bold">Activé</span>
+</div>
+</div>
+</div>
+<!-- Bento Grid Section 2 -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Objectif du mois (Span 2 cols on large) -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg p-6 shadow-level-1 lg:col-span-2 flex flex-col justify-center">
+<h2 class="font-subtitle text-subtitle text-on-surface mb-6">Objectif du mois</h2>
+<div class="flex items-end gap-6 mb-4">
+<span class="text-6xl font-bold tracking-tighter text-status-green-text tabular-nums leading-none">75%</span>
+<div class="pb-1">
+<span class="font-body-table text-body-table text-secondary block mb-1">Activations réalisées</span>
+<span class="font-subtitle text-subtitle text-on-surface tabular-nums">750 <span class="text-secondary font-body-table text-body-table">/ 1000 activés</span></span>
+</div>
+</div>
+<!-- Thick Progress Bar -->
+<div class="w-full bg-border-color rounded-full h-4 overflow-hidden">
+<div class="bg-status-green-text h-full rounded-full transition-all duration-1000 ease-out" style="width: 75%"></div>
+</div>
+</div>
+<!-- Commissions dues -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg p-6 shadow-level-1 flex flex-col">
+<h2 class="font-subtitle text-subtitle text-on-surface mb-6">Commissions dues aux apporteurs</h2>
+<div class="space-y-4 flex-1 flex flex-col justify-center">
+<div>
+<span class="font-label-metadata text-label-metadata text-secondary uppercase block mb-1">Montant total</span>
+<span class="font-key-value text-[24px] leading-tight text-on-surface tabular-nums block">450,000 <span class="text-secondary font-body-table text-body-table">FCFA</span></span>
+</div>
+<div class="h-px w-full bg-border-color"></div>
+<div>
+<span class="font-label-metadata text-label-metadata text-secondary uppercase block mb-1">Déjà payé</span>
+<span class="font-key-value text-[24px] leading-tight text-status-green-text tabular-nums block">320,000 <span class="text-secondary font-body-table text-body-table">FCFA</span></span>
+</div>
+</div>
+</div>
+</div>
+<!-- Bento Grid Section 3 -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Top Apporteurs (1 col) -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg shadow-level-1 overflow-hidden flex flex-col">
+<div class="p-4 border-b border-border-color">
+<h2 class="font-subtitle text-subtitle text-on-surface">Top apporteurs</h2>
+</div>
+<div class="p-0 flex-1">
+<ul class="divide-y divide-border-color">
+<li class="flex items-center justify-between p-4 hover:bg-table-hover-bg transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-label-metadata text-label-metadata text-secondary w-4 text-center">1</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-xs uppercase">JD</div>
+<span class="font-body-table text-body-table text-on-surface font-medium">Jean Dupont</span>
+</div>
+<span class="bg-surface-container-high text-on-surface px-2 py-1 rounded-full font-label-metadata text-label-metadata tabular-nums">120 ventes</span>
+</li>
+<li class="flex items-center justify-between p-4 hover:bg-table-hover-bg transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-label-metadata text-label-metadata text-secondary w-4 text-center">2</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-xs uppercase">MS</div>
+<span class="font-body-table text-body-table text-on-surface font-medium">Marie Sarr</span>
+</div>
+<span class="bg-surface-container-high text-on-surface px-2 py-1 rounded-full font-label-metadata text-label-metadata tabular-nums">95 ventes</span>
+</li>
+<li class="flex items-center justify-between p-4 hover:bg-table-hover-bg transition-colors">
+<div class="flex items-center gap-3">
+<span class="font-label-metadata text-label-metadata text-secondary w-4 text-center">3</span>
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-xs uppercase">MT</div>
+<span class="font-body-table text-body-table text-on-surface font-medium">Moussa Traoré</span>
+</div>
+<span class="bg-surface-container-high text-on-surface px-2 py-1 rounded-full font-label-metadata text-label-metadata tabular-nums">88 ventes</span>
+</li>
+</ul>
+</div>
+</div>
+<!-- Répartition par carton (2 cols) -->
+<div class="bg-surface-container-lowest border border-border-color rounded-lg shadow-level-1 lg:col-span-2 overflow-hidden flex flex-col">
+<div class="p-4 border-b border-border-color flex justify-between items-center bg-surface-container-lowest">
+<h2 class="font-subtitle text-subtitle text-on-surface">Répartition par carton</h2>
+<button class="text-primary hover:bg-surface-container-low px-3 py-1.5 rounded-md font-body-table text-body-table transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 18px;">open_in_new</span>
+                            Voir tout
+                        </button>
+</div>
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-table-header-bg border-b border-border-color">
+<th class="p-4 font-label-metadata text-label-metadata text-secondary uppercase font-semibold">Carton ID</th>
+<th class="p-4 font-label-metadata text-label-metadata text-secondary uppercase font-semibold text-right">Total</th>
+<th class="p-4 font-label-metadata text-label-metadata text-secondary uppercase font-semibold text-right">Vendus</th>
+<th class="p-4 font-label-metadata text-label-metadata text-secondary uppercase font-semibold text-right">Activés</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-border-color">
+<tr class="h-[48px] hover:bg-table-hover-bg transition-colors">
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface font-medium">CRT-2023-A01</td>
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface text-right tabular-nums">50</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-orange-text text-right tabular-nums">35</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-green-text text-right tabular-nums">15</td>
+</tr>
+<tr class="h-[48px] hover:bg-table-hover-bg transition-colors">
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface font-medium">CRT-2023-A02</td>
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface text-right tabular-nums">50</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-orange-text text-right tabular-nums">48</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-green-text text-right tabular-nums">42</td>
+</tr>
+<tr class="h-[48px] hover:bg-table-hover-bg transition-colors">
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface font-medium">CRT-2023-B05</td>
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface text-right tabular-nums">100</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-orange-text text-right tabular-nums">12</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-green-text text-right tabular-nums">0</td>
+</tr>
+<tr class="h-[48px] hover:bg-table-hover-bg transition-colors">
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface font-medium">CRT-2023-C12</td>
+<td class="px-4 py-2 font-body-table text-body-table text-on-surface text-right tabular-nums">20</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-orange-text text-right tabular-nums">20</td>
+<td class="px-4 py-2 font-body-table text-body-table text-status-green-text text-right tabular-nums">20</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

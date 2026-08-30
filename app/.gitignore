@@ -1,0 +1,11 @@
+node_modules/
+dist/
+release/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+.plans/
+.claude/settings.local.json
+.env
+.env.*
+!.env.example
