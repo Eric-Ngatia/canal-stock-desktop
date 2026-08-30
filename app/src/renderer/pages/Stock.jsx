@@ -135,34 +135,34 @@ export default function Stock() {
       {/* Data Table */}
       <div className="bg-surface-container-lowest rounded-xl border border-border-color shadow-level-1 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse whitespace-nowrap">
+          <table className="w-full text-left border-collapse table-fixed">
             <thead>
               <tr className="bg-table-header-bg border-b border-border-color text-label-metadata font-label-metadata text-secondary uppercase tracking-wider">
-                <th className="px-4 h-10 font-medium">N° Carton</th>
-                <th className="px-4 h-10 font-medium">N° Décodeur</th>
-                <th className="px-4 h-10 font-medium">Date livraison</th>
-                <th className="px-4 h-10 font-medium">Statut</th>
-                <th className="px-4 h-10 font-medium">Date vente</th>
-                <th className="px-4 h-10 font-medium">Apporteur/Vendeur</th>
-                <th className="px-4 h-10 font-medium">Date activation</th>
-                <th className="px-4 h-10 font-medium">Destinataire</th>
+                <th className="px-4 h-10 font-medium w-[10%]">N° Carton</th>
+                <th className="px-4 h-10 font-medium w-[13%]">N° Décodeur</th>
+                <th className="px-4 h-10 font-medium w-[10%]">Date livraison</th>
+                <th className="px-4 h-10 font-medium w-[9%]">Statut</th>
+                <th className="px-4 h-10 font-medium w-[10%]">Date vente</th>
+                <th className="px-4 h-10 font-medium w-[19%]">Apporteur/Vendeur</th>
+                <th className="px-4 h-10 font-medium w-[10%]">Date activation</th>
+                <th className="px-4 h-10 font-medium w-[19%]">Destinataire</th>
               </tr>
             </thead>
             <tbody className="font-body-table text-body-table text-on-surface">
               {pageItems.map((d) => (
-                <tr key={d.id} className={`row-${d.statut} border-b border-border-color hover:bg-table-hover-bg transition-colors h-12`}>
-                  <td className="px-4">{d.carton_code}</td>
-                  <td className="px-4 font-mono text-xs">{d.numero_serie}</td>
-                  <td className="px-4 text-secondary">{d.date_livraison || '-'}</td>
-                  <td className="px-4">
-                    <span className={`${BADGE_CLASS[d.statut]} px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider`}>
+                <tr key={d.id} className={`row-${d.statut} border-b border-border-color hover:bg-table-hover-bg transition-colors`}>
+                  <td className="px-4 py-2 break-words">{d.carton_code}</td>
+                  <td className="px-4 py-2 font-mono text-xs break-all">{d.numero_serie}</td>
+                  <td className="px-4 py-2 text-secondary break-words">{d.date_livraison || '-'}</td>
+                  <td className="px-4 py-2">
+                    <span className={`${BADGE_CLASS[d.statut]} px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider whitespace-nowrap`}>
                       {STATUT_LABEL[d.statut]}
                     </span>
                   </td>
-                  <td className="px-4 text-secondary">{d.date_vente || '-'}</td>
-                  <td className="px-4 text-secondary">{d.apporteur || '-'}</td>
-                  <td className="px-4 text-secondary">{d.date_activation || '-'}</td>
-                  <td className="px-4 text-secondary">{d.destinataire || '-'}</td>
+                  <td className="px-4 py-2 text-secondary break-words">{d.date_vente || '-'}</td>
+                  <td className="px-4 py-2 text-secondary break-words">{d.apporteur || '-'}</td>
+                  <td className="px-4 py-2 text-secondary break-words">{d.date_activation || '-'}</td>
+                  <td className="px-4 py-2 text-secondary break-words">{d.destinataire || '-'}</td>
                 </tr>
               ))}
               {pageItems.length === 0 && (
