@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { ExternalLink } from 'lucide-react';
-import { decodeursApi, objectifsApi, apporteursApi } from '../api/bridge.js';
+import { ExternalLink, FileSpreadsheet, DatabaseBackup, CheckCircle2, AlertTriangle } from 'lucide-react';
+import { decodeursApi, objectifsApi, apporteursApi, exportApi } from '../api/bridge.js';
 
 function StatCard({ label, valeur, badge }) {
   return (
@@ -30,6 +30,8 @@ export default function Dashboard() {
   const [commissions, setCommissions] = useState({ totalDu: 0, totalPaye: 0 });
   const [apporteurs, setApporteurs] = useState([]);
   const [cartons, setCartons] = useState([]);
+  const [exportMessage, setExportMessage] = useState(null); // { type: 'success' | 'error', texte }
+  const [exportLoading, setExportLoading] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -60,6 +62,34 @@ export default function Dashboard() {
       .join('')
       .slice(0, 2)
       .toUpperCase();
+
+  const exporterExcel = async () => {
+    setExportLoading(true);
+    setExportMessage(null);
+    try {
+      const chemin = await exportApi.excel();
+      if (chemin) setExportMessage({ type: 'success', texte: `Export Excel enregistré : ${chemin}` });
+    } catch (err) {
+      setExportMessage({ type: 'error', texte: err.message || "Erreur lors de l'export Excel" });
+    } finally {
+      setExportLoading(false);
+    }
+  };
+
+  const sauvegarderBase = async () => {
+    setExportLoading(true);
+    setExportMessage(null);
+    try {
+      const dossier = await exportApi.choisirDossier();
+      if (!dossier) return;
+      const chemin = await exportApi.sauvegarde(dossier);
+      setExportMessage({ type: 'success', texte: `Sauvegarde effectuée : ${chemin}` });
+    } catch (err) {
+      setExportMessage({ type: 'error', texte: err.message || 'Erreur lors de la sauvegarde' });
+    } finally {
+      setExportLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-6">
@@ -234,6 +264,44 @@ export default function Dashboard() {
             </table>
           </div>
         </div>
+      </div>
+
+      {/* Export & Sauvegarde — RG-08, pas de dépendance réseau (copie locale / fichier local) */}
+      <div className="bg-surface-container-lowest border border-border-color rounded-lg p-6 shadow-level-1">
+        <h2 className="font-subtitle text-subtitle text-on-surface mb-1">Export & Sauvegarde</h2>
+        <p className="font-body-table text-body-table text-secondary mb-4">
+          Toutes les données restent locales à ce poste — pensez à exporter ou sauvegarder régulièrement.
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={exporterExcel}
+            disabled={exportLoading}
+            className="bg-primary text-on-primary px-4 py-2 rounded-lg font-subtitle text-subtitle hover:bg-primary-container transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            <FileSpreadsheet size={18} />
+            Exporter en Excel
+          </button>
+          <button
+            onClick={sauvegarderBase}
+            disabled={exportLoading}
+            className="bg-surface-container-lowest text-on-surface border border-outline-variant px-4 py-2 rounded-lg font-subtitle text-subtitle hover:bg-surface-container-low transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            <DatabaseBackup size={18} />
+            Sauvegarder la base
+          </button>
+        </div>
+        {exportMessage && (
+          <div
+            className={`mt-4 flex items-center gap-2 px-4 py-2 rounded-lg text-sm w-fit ${
+              exportMessage.type === 'success'
+                ? 'text-status-green-text bg-status-green-bg'
+                : 'text-status-red-text bg-status-red-bg'
+            }`}
+          >
+            {exportMessage.type === 'success' ? <CheckCircle2 size={16} /> : <AlertTriangle size={16} />}
+            {exportMessage.texte}
+          </div>
+        )}
       </div>
     </div>
   );

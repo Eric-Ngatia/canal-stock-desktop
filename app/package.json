@@ -2,6 +2,7 @@
   "name": "canal-stock-desktop",
   "version": "0.1.0",
   "description": "Gestion de stock et vente de décodeurs/paraboles Canal+ — app desktop hors ligne",
+  "author": "Eric Ngatia <ericonstantngatia@gmail.com>",
   "main": "src/main/main.js",
   "scripts": {
     "dev:renderer": "vite",
@@ -9,6 +10,7 @@
     "dev": "concurrently \"npm:dev:renderer\" \"wait-on http://localhost:5173 && npm:dev:electron\"",
     "build:renderer": "vite build",
     "build": "npm run build:renderer && electron-builder",
+    "postbuild": "npm rebuild better-sqlite3",
     "test": "node --test test/**/*.test.js",
     "test:watch": "node --test --watch test/**/*.test.js",
     "lint": "eslint src"
@@ -17,7 +19,6 @@
     "@fontsource/inter": "^5.1.0",
     "better-sqlite3": "^11.10.0",
     "dotenv": "^16.4.5",
-    "electron-serve": "^1.3.0",
     "lucide-react": "^0.475.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -41,15 +42,23 @@
     "appId": "com.canalstock.desktop",
     "productName": "Gestion Stock Canal+",
     "files": [
-      "dist/**/*",
-      "src/main/**/*",
-      "package.json"
+      "**/*",
+      "!test/**/*",
+      "!.claude/**/*",
+      "!.plans/**/*",
+      "!.git/**/*",
+      "!*.sqlite",
+      "!.env*"
+    ],
+    "asarUnpack": [
+      "node_modules/better-sqlite3/**/*"
     ],
     "directories": {
       "output": "release"
     },
     "win": {
-      "target": "nsis"
+      "target": "nsis",
+      "signAndEditExecutable": false
     },
     "mac": {
       "target": "dmg"

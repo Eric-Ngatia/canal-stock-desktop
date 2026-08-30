@@ -42,3 +42,21 @@ test('RG-08: exporterExcel() produit un fichier lisible contenant les decodeurs'
 
   fs.unlinkSync(dest);
 });
+
+test('RG-08: copierSauvegarde() copie le fichier source vers un nouveau fichier horodate', () => {
+  delete require.cache[require.resolve('../src/main/services/export.service')];
+  const exportService = require('../src/main/services/export.service');
+
+  const sourcePath = path.join(os.tmpdir(), `source-test-${Date.now()}.sqlite`);
+  const destinationDir = os.tmpdir();
+  fs.writeFileSync(sourcePath, 'contenu-sqlite-simule');
+
+  const destination = exportService.copierSauvegarde(destinationDir, sourcePath);
+
+  assert.ok(fs.existsSync(destination), 'le fichier de sauvegarde doit exister');
+  assert.match(path.basename(destination), /^canal-stock-sauvegarde-.*\.sqlite$/);
+  assert.equal(fs.readFileSync(destination, 'utf-8'), 'contenu-sqlite-simule');
+
+  fs.unlinkSync(sourcePath);
+  fs.unlinkSync(destination);
+});
