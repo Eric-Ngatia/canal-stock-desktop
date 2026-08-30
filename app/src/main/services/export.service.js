@@ -19,7 +19,6 @@ const { getDb } = require('../db/database');
  */
 function copierSauvegarde(destinationDir, sourcePath) {
   if (!sourcePath) {
-    // eslint-disable-next-line global-require
     const { app } = require('electron');
     const userDataPath = app.getPath('userData');
     const dbFilename = process.env.DB_FILENAME || 'canal-stock.sqlite';

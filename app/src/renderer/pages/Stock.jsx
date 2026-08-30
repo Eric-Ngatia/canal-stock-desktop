@@ -27,7 +27,6 @@ export default function Stock() {
 
   useEffect(() => {
     charger();
-    // eslint-disable-next-line
   }, [filtreStatut]);
 
   const ajouterStock = async () => {

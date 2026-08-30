@@ -16,7 +16,6 @@ let db = null;
 function getDb() {
   if (db) return db;
 
-  // eslint-disable-next-line global-require
   const { app } = require('electron');
   const userDataPath = app.getPath('userData');
   const dbFilename = process.env.DB_FILENAME || 'canal-stock.sqlite';
