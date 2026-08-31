@@ -7,6 +7,7 @@ const importService = require('../services/import.service');
 const apporteursService = require('../services/apporteurs.service');
 const objectifsService = require('../services/objectifs.service');
 const exportService = require('../services/export.service');
+const reinitialisationService = require('../services/reinitialisation.service');
 
 /**
  * Enregistre tous les canaux IPC exposés au renderer. Chaque canal appelle UN service,
@@ -85,6 +86,12 @@ function enregistrerHandlers() {
     app.exit(0);
     return resultat;
   });
+
+  // Réinitialisation « nouvelle année »
+  ipcMain.handle('canal:reinitialisation:apercu', () => reinitialisationService.apercuReinitialisation());
+  ipcMain.handle('canal:reinitialisation:nouvelleAnnee', (_e, dossierSauvegarde) =>
+    reinitialisationService.reinitialiserNouvelleAnnee(dossierSauvegarde)
+  );
 }
 
 module.exports = { enregistrerHandlers };
