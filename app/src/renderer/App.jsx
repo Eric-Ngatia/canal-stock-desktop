@@ -7,6 +7,7 @@ import VenteActivation from './pages/VenteActivation.jsx';
 import Import from './pages/Import.jsx';
 import Apporteurs from './pages/Apporteurs.jsx';
 import Objectifs from './pages/Objectifs.jsx';
+import Sauvegarde from './pages/Sauvegarde.jsx';
 
 export default function App() {
   return (
@@ -23,6 +24,7 @@ export default function App() {
               <Route path="/import" element={<Import />} />
               <Route path="/apporteurs" element={<Apporteurs />} />
               <Route path="/objectifs" element={<Objectifs />} />
+              <Route path="/sauvegarde" element={<Sauvegarde />} />
             </Routes>
           </div>
         </main>

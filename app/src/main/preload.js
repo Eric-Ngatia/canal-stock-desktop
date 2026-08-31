@@ -39,5 +39,7 @@ contextBridge.exposeInMainWorld('api', {
     choisirDossier: () => ipcRenderer.invoke('canal:export:choisirDossier'),
     sauvegarde: (dossier) => ipcRenderer.invoke('canal:export:sauvegarde', dossier),
     excel: () => ipcRenderer.invoke('canal:export:excel'),
+    choisirFichierRestauration: () => ipcRenderer.invoke('canal:export:choisirFichierRestauration'),
+    restaurer: (cheminSauvegarde) => ipcRenderer.invoke('canal:export:restaurer', cheminSauvegarde),
   },
 });

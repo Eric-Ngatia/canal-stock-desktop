@@ -38,6 +38,20 @@ function setDbForTests(customDb) {
   db = customDb;
 }
 
+/**
+ * Ferme proprement le handle SQLite ouvert, si présent, et oublie la référence pour qu'un
+ * prochain `getDb()` en rouvre un nouveau. Indispensable avant d'écraser le fichier `.sqlite`
+ * sur disque (restauration d'une sauvegarde) : sous Windows, `better-sqlite3` garde le
+ * fichier verrouillé tant que ce process le tient ouvert, et `db.close()` déclenche le
+ * checkpoint WAL qui résorbe les fichiers `-wal`/`-shm` annexes.
+ */
+function fermerDb() {
+  if (db) {
+    db.close();
+    db = null;
+  }
+}
+
 function runMigrations(database) {
   database.exec(`
     CREATE TABLE IF NOT EXISTS _migrations (
@@ -65,4 +79,4 @@ function runMigrations(database) {
   }
 }
 
-module.exports = { getDb, setDbForTests };
+module.exports = { getDb, setDbForTests, fermerDb };

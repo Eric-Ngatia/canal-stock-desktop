@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Package, RadioTower, UploadCloud, Users, Target } from 'lucide-react';
+import { LayoutDashboard, Package, RadioTower, UploadCloud, Users, Target, Save } from 'lucide-react';
 
 const links = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -8,6 +8,7 @@ const links = [
   { to: '/import', label: 'Import', icon: UploadCloud },
   { to: '/apporteurs', label: 'Apporteurs', icon: Users },
   { to: '/objectifs', label: 'Objectifs', icon: Target },
+  { to: '/sauvegarde', label: 'Sauvegarde', icon: Save },
 ];
 
 export default function Sidebar() {

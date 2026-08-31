@@ -9,6 +9,7 @@ const TITRES = {
   '/import': 'Import',
   '/apporteurs': 'Apporteurs',
   '/objectifs': 'Objectifs',
+  '/sauvegarde': 'Sauvegarde & export',
 };
 
 export default function TopBar() {
