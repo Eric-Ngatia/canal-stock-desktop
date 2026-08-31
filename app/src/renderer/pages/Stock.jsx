@@ -125,7 +125,7 @@ export default function Stock() {
           </div>
           <div className="relative">
             <select
-              className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest"
+              className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest text-on-surface"
               value={filtreCarton}
               onChange={(e) => {
                 setFiltreCarton(e.target.value);
@@ -143,7 +143,7 @@ export default function Stock() {
           </div>
           <div className="relative">
             <select
-              className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest"
+              className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest text-on-surface"
               value={filtreStatut}
               onChange={(e) => setFiltreStatut(e.target.value)}
             >

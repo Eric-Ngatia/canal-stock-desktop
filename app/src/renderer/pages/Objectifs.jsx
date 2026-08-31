@@ -110,7 +110,7 @@ export default function Objectifs() {
               <div className="flex flex-col gap-1.5">
                 <label className="font-label-metadata text-label-metadata text-secondary">Mois</label>
                 <select
-                  className="w-full h-10 border border-border-color rounded bg-surface-container-lowest text-body-table focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
+                  className="w-full h-10 border border-border-color rounded bg-surface-container-lowest text-on-surface text-body-table focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
                   value={mois}
                   onChange={(e) => setMois(Number(e.target.value))}
                 >
@@ -123,7 +123,7 @@ export default function Objectifs() {
                 <label className="font-label-metadata text-label-metadata text-secondary">Année</label>
                 <input
                   type="number"
-                  className="w-full h-10 px-3 border border-border-color rounded bg-surface-container-lowest text-body-table focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
+                  className="w-full h-10 px-3 border border-border-color rounded bg-surface-container-lowest text-on-surface text-body-table focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
                   value={annee}
                   onChange={(e) => setAnnee(Number(e.target.value))}
                 />
@@ -134,7 +134,7 @@ export default function Objectifs() {
               <input
                 type="number"
                 min="0"
-                className="w-full h-10 px-3 border border-border-color rounded bg-surface-container-lowest text-body-table font-mono focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
+                className="w-full h-10 px-3 border border-border-color rounded bg-surface-container-lowest text-on-surface text-body-table font-mono focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
                 value={cible}
                 onChange={(e) => setCible(e.target.value)}
                 placeholder="ex: 500"
