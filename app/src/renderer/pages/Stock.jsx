@@ -218,7 +218,7 @@ export default function Stock() {
                 <th className="px-4 h-10 font-medium w-[9%]">Date livraison</th>
                 <th className="px-4 h-10 font-medium w-[8%]">Statut</th>
                 <th className="px-4 h-10 font-medium w-[9%]">Date vente</th>
-                <th className="px-4 h-10 font-medium w-[16%]">Apporteur/Vendeur</th>
+                <th className="px-4 h-10 font-medium w-[16%]">Apporteur</th>
                 <th className="px-4 h-10 font-medium w-[9%]">Date activation</th>
                 <th className="px-4 h-10 font-medium w-[16%]">Destinataire</th>
                 <th className="px-4 h-10 font-medium w-[12%] text-right">Actions</th>
