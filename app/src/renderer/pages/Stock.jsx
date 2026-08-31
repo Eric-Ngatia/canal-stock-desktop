@@ -78,19 +78,19 @@ export default function Stock() {
             <input
               type="text"
               placeholder="Code carton (ex: O3, U5, U21)"
-              className="h-10 px-4 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table"
+              className="h-10 px-4 border border-outline-variant rounded bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table"
               value={cartonCode}
               onChange={(e) => setCartonCode(e.target.value)}
             />
             <input
               type="date"
-              className="h-10 px-4 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table"
+              className="h-10 px-4 border border-outline-variant rounded bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table"
               value={dateLivraison}
               onChange={(e) => setDateLivraison(e.target.value)}
             />
           </div>
           <textarea
-            className="w-full h-32 p-3 border border-outline-variant rounded font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
+            className="w-full h-32 p-3 border border-outline-variant rounded bg-surface-container-lowest text-on-surface font-mono text-sm focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none"
             placeholder="Un numéro de série par ligne"
             value={bulkText}
             onChange={(e) => setBulkText(e.target.value)}
@@ -118,7 +118,7 @@ export default function Stock() {
             <input
               type="text"
               placeholder="Rechercher par n° de série"
-              className="w-full pl-10 pr-4 h-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table"
+              className="w-full pl-10 pr-4 h-10 border border-outline-variant rounded bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table"
               value={q}
               onChange={(e) => setQ(e.target.value)}
             />

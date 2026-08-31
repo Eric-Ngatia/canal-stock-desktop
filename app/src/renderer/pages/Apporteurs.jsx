@@ -74,7 +74,7 @@ export default function Apporteurs() {
             </label>
             <input
               id="nom"
-              className="w-full h-10 px-3 rounded border border-border-color focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all font-body-table text-body-table"
+              className="w-full h-10 px-3 rounded border border-border-color bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all font-body-table text-body-table"
               value={nom}
               onChange={(e) => setNom(e.target.value)}
               placeholder="Ex: Jean Dupont"
@@ -86,7 +86,7 @@ export default function Apporteurs() {
             </label>
             <input
               id="telephone"
-              className="w-full h-10 px-3 rounded border border-border-color focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all font-body-table text-body-table"
+              className="w-full h-10 px-3 rounded border border-border-color bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all font-body-table text-body-table"
               value={telephone}
               onChange={(e) => setTelephone(e.target.value)}
               placeholder="Ex: +225 0102030405"

@@ -100,7 +100,7 @@ export default function VenteActivation() {
             onClick={() => setTab('vente')}
             className={`px-6 py-2 rounded-full font-subtitle text-subtitle text-sm transition-all flex items-center gap-2 ${
               tab === 'vente'
-                ? 'bg-white shadow-sm text-status-orange-text ring-1 ring-outline-variant/20'
+                ? 'bg-surface-container-lowest shadow-sm text-status-orange-text ring-1 ring-outline-variant/20'
                 : 'text-secondary hover:text-on-surface'
             }`}
           >
@@ -112,7 +112,7 @@ export default function VenteActivation() {
             onClick={() => setTab('activation')}
             className={`px-6 py-2 rounded-full font-subtitle text-subtitle text-sm transition-all flex items-center gap-2 ${
               tab === 'activation'
-                ? 'bg-white shadow-sm text-status-green-text ring-1 ring-outline-variant/20'
+                ? 'bg-surface-container-lowest shadow-sm text-status-green-text ring-1 ring-outline-variant/20'
                 : 'text-secondary hover:text-on-surface'
             }`}
           >

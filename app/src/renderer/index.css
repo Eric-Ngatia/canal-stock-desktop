@@ -3,6 +3,73 @@
 @import '@fontsource/inter/500.css';
 @import '@fontsource/inter/600.css';
 
+/*
+ * Tokens couleur du design system "Precision Logistics" (Stitch), en triplets RGB
+ * (space-separated) pour que tailwind.config.js puisse les combiner avec les modificateurs
+ * d'opacité (`rgb(var(--color-x) / <alpha-value>)`). `.dark` réécrit chaque variable pour le
+ * mode sombre — activé en posant la classe `dark` sur <html> (voir theme-init.js).
+ */
+:root {
+  --color-primary: 53 37 205;
+  --color-primary-container: 79 70 229;
+  --color-on-primary: 255 255 255;
+  --color-secondary: 93 93 104;
+  --color-secondary-container: 227 225 238;
+  --color-background: 245 245 247;
+  --color-surface: 252 248 252;
+  --color-surface-container-lowest: 255 255 255;
+  --color-surface-container-low: 246 242 247;
+  --color-surface-container: 240 237 241;
+  --color-surface-container-high: 234 231 235;
+  --color-on-surface: 27 27 30;
+  --color-on-surface-variant: 70 69 85;
+  --color-outline: 119 117 135;
+  --color-outline-variant: 199 196 216;
+  --color-border-color: 229 229 234;
+  --color-table-header-bg: 249 249 251;
+  --color-table-hover-bg: 245 245 247;
+  --color-status-gray-bg: 243 244 246;
+  --color-status-gray-text: 107 107 118;
+  --color-status-orange-bg: 255 247 237;
+  --color-status-orange-text: 249 115 22;
+  --color-status-green-bg: 240 253 244;
+  --color-status-green-text: 22 163 74;
+  --color-status-red-bg: 254 242 242;
+  --color-status-red-text: 220 38 38;
+}
+
+.dark {
+  --color-primary: 139 128 255;
+  --color-primary-container: 79 70 229;
+  --color-on-primary: 255 255 255;
+  --color-secondary: 181 179 194;
+  --color-secondary-container: 54 50 86;
+  --color-background: 18 18 20;
+  --color-surface: 18 18 20;
+  /* En clair, "lowest" est la teinte la plus vive (blanc pur) pour que les cartes se
+     détachent du fond gris ; en sombre il faut inverser le sens du dégradé pour garder ce
+     même effet de "pop" — "lowest" doit être la plus CLAIRE des quatre, pas la plus sombre. */
+  --color-surface-container-lowest: 45 44 51;
+  --color-surface-container-low: 37 36 42;
+  --color-surface-container: 31 30 36;
+  --color-surface-container-high: 26 25 30;
+  --color-on-surface: 231 229 234;
+  --color-on-surface-variant: 199 196 216;
+  --color-outline: 142 139 160;
+  --color-outline-variant: 65 63 76;
+  --color-border-color: 65 63 76;
+  --color-table-header-bg: 30 29 34;
+  --color-table-hover-bg: 35 34 40;
+  --color-status-gray-bg: 42 41 47;
+  --color-status-gray-text: 179 177 189;
+  --color-status-orange-bg: 64 42 19;
+  --color-status-orange-text: 251 146 60;
+  --color-status-green-bg: 18 58 30;
+  --color-status-green-text: 74 222 128;
+  --color-status-red-bg: 64 22 22;
+  --color-status-red-text: 248 113 113;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,6 +77,6 @@
 .tabular-nums { font-variant-numeric: tabular-nums; }
 
 /* Code couleur de statut décodeur — tokens du design system "Precision Logistics". */
-.row-en_stock { background-color: #ffffff; }
-.row-vendu    { background-color: #fff7ed; }
-.row-active   { background-color: #f0fdf4; }
+.row-en_stock { background-color: rgb(var(--color-surface-container-lowest)); }
+.row-vendu    { background-color: rgb(var(--color-status-orange-bg)); }
+.row-active   { background-color: rgb(var(--color-status-green-bg)); }
