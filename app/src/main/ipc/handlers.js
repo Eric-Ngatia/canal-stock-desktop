@@ -16,6 +16,7 @@ function enregistrerHandlers() {
   // Décodeurs / stock
   ipcMain.handle('canal:decodeurs:lister', (_e, filtres) => decodeursService.lister(filtres));
   ipcMain.handle('canal:decodeurs:ajouterLot', (_e, payload) => decodeursService.ajouterLot(payload));
+  ipcMain.handle('canal:decodeurs:modifier', (_e, { id, ...payload }) => decodeursService.modifier(id, payload));
   ipcMain.handle('canal:decodeurs:supprimer', (_e, id) => decodeursService.supprimer(id));
   ipcMain.handle('canal:decodeurs:compteurs', () => decodeursService.compteurs());
   ipcMain.handle('canal:decodeurs:repartitionParCarton', () => decodeursService.repartitionParCarton());

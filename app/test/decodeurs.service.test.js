@@ -48,6 +48,71 @@ test('RG-01: ajouterLot() rapporte les doublons sans faire echouer tout le lot',
   assert.deepEqual(deuxieme.doublons, ['24300000089804']);
 });
 
+test('modifier() corrige numero de serie, carton, date de livraison et destinataire', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const decodeursService = require('../src/main/services/decodeurs.service');
+
+  setDbForTests(creerBaseTest());
+  decodeursService.ajouterLot({ numeros: ['A1'], cartonCode: 'O3', dateLivraison: '2026-01-01' });
+  const db = getDb();
+  const { id } = db.prepare('SELECT id FROM decodeurs WHERE numero_serie = ?').get('A1');
+
+  decodeursService.modifier(id, {
+    numeroSerie: 'A1-corrige',
+    cartonCode: 'U5',
+    dateLivraison: '2026-02-15',
+    destinataire: 'Client X',
+  });
+
+  const ligne = db.prepare('SELECT * FROM decodeurs WHERE id = ?').get(id);
+  assert.equal(ligne.numero_serie, 'A1-corrige');
+  assert.equal(ligne.carton_code, 'U5');
+  assert.equal(ligne.date_livraison, '2026-02-15');
+  assert.equal(ligne.destinataire, 'Client X');
+});
+
+test('modifier() refuse un numero de serie vide (RG-01), sans ecrire', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const decodeursService = require('../src/main/services/decodeurs.service');
+
+  setDbForTests(creerBaseTest());
+  decodeursService.ajouterLot({ numeros: ['A1'], cartonCode: 'O3' });
+  const db = getDb();
+  const { id } = db.prepare('SELECT id FROM decodeurs WHERE numero_serie = ?').get('A1');
+
+  assert.throws(() => decodeursService.modifier(id, { numeroSerie: '  ', cartonCode: 'O3' }), /obligatoire/i);
+
+  const ligne = db.prepare('SELECT numero_serie FROM decodeurs WHERE id = ?').get(id);
+  assert.equal(ligne.numero_serie, 'A1');
+});
+
+test('modifier() refuse un numero de serie deja utilise par un autre decodeur (RG-01)', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const decodeursService = require('../src/main/services/decodeurs.service');
+
+  setDbForTests(creerBaseTest());
+  decodeursService.ajouterLot({ numeros: ['A1', 'A2'], cartonCode: 'O3' });
+  const db = getDb();
+  const { id } = db.prepare('SELECT id FROM decodeurs WHERE numero_serie = ?').get('A2');
+
+  assert.throws(() => decodeursService.modifier(id, { numeroSerie: 'A1', cartonCode: 'O3' }), /UNIQUE/);
+});
+
+test('supprimer() retire un decodeur sans toucher aux autres', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const decodeursService = require('../src/main/services/decodeurs.service');
+
+  setDbForTests(creerBaseTest());
+  decodeursService.ajouterLot({ numeros: ['A1', 'A2'], cartonCode: 'O3' });
+  const db = getDb();
+  const { id } = db.prepare('SELECT id FROM decodeurs WHERE numero_serie = ?').get('A1');
+
+  decodeursService.supprimer(id);
+
+  assert.equal(db.prepare('SELECT COUNT(*) n FROM decodeurs').get().n, 1);
+  assert.equal(db.prepare('SELECT numero_serie FROM decodeurs WHERE numero_serie = ?').get('A2').numero_serie, 'A2');
+});
+
 test('RG-05: transitionAutorisee refuse une regression de statut', () => {
   const { transitionAutorisee } = require('../src/main/services/decodeurs.service');
 

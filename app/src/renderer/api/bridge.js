@@ -8,6 +8,7 @@ const api = window.api;
 export const decodeursApi = {
   lister: (filtres) => api.decodeurs.lister(filtres),
   ajouterLot: (payload) => api.decodeurs.ajouterLot(payload),
+  modifier: (id, payload) => api.decodeurs.modifier(id, payload),
   supprimer: (id) => api.decodeurs.supprimer(id),
   compteurs: () => api.decodeurs.compteurs(),
   repartitionParCarton: () => api.decodeurs.repartitionParCarton(),

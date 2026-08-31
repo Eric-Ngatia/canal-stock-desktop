@@ -8,6 +8,7 @@ contextBridge.exposeInMainWorld('api', {
   decodeurs: {
     lister: (filtres) => ipcRenderer.invoke('canal:decodeurs:lister', filtres),
     ajouterLot: (payload) => ipcRenderer.invoke('canal:decodeurs:ajouterLot', payload),
+    modifier: (id, payload) => ipcRenderer.invoke('canal:decodeurs:modifier', { id, ...payload }),
     supprimer: (id) => ipcRenderer.invoke('canal:decodeurs:supprimer', id),
     compteurs: () => ipcRenderer.invoke('canal:decodeurs:compteurs'),
     repartitionParCarton: () => ipcRenderer.invoke('canal:decodeurs:repartitionParCarton'),
