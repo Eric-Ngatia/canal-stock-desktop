@@ -30,6 +30,15 @@ export default function Stock() {
     charger();
   }, [filtreStatut]);
 
+  // Recherche en direct : recharge automatiquement pendant la frappe, avec un petit debounce
+  // pour ne pas relancer une requête à chaque touche.
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      charger();
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, [q]);
+
   const ajouterStock = async () => {
     const numeros = bulkText.split('\n').map((n) => n.trim()).filter(Boolean);
     if (numeros.length === 0) return;
