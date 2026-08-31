@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, ScanBarcode, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
+import { Plus, ScanBarcode, ChevronDown } from 'lucide-react';
 import { decodeursApi } from '../api/bridge.js';
 
 const STATUT_LABEL = { en_stock: 'En stock', vendu: 'Vendu', active: 'Activé' };
@@ -37,12 +37,6 @@ export default function Stock() {
     setBulkText('');
     setShowAdd(false);
     charger();
-  };
-
-  // Cycle asc -> desc -> pas de tri (retour à l'ordre par défaut du service : plus récent d'abord).
-  const basculerTriCarton = () => {
-    setTriCarton((t) => (t === null ? 'asc' : t === 'asc' ? 'desc' : null));
-    setPage(1);
   };
 
   const itemsAffiches = triCarton
@@ -122,6 +116,21 @@ export default function Stock() {
           <div className="relative">
             <select
               className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest"
+              value={triCarton || ''}
+              onChange={(e) => {
+                setTriCarton(e.target.value || null);
+                setPage(1);
+              }}
+            >
+              <option value="">Trier par carton</option>
+              <option value="asc">N° Carton (croissant)</option>
+              <option value="desc">N° Carton (décroissant)</option>
+            </select>
+            <ChevronDown size={16} className="absolute right-3 top-3 text-outline pointer-events-none" />
+          </div>
+          <div className="relative">
+            <select
+              className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest"
               value={filtreStatut}
               onChange={(e) => setFiltreStatut(e.target.value)}
             >
@@ -152,19 +161,7 @@ export default function Stock() {
           <table className="w-full text-left border-collapse table-fixed">
             <thead>
               <tr className="bg-table-header-bg border-b border-border-color text-label-metadata font-label-metadata text-secondary uppercase tracking-wider">
-                <th className="px-4 h-10 font-medium w-[10%] p-0">
-                  <button
-                    type="button"
-                    onClick={basculerTriCarton}
-                    className="w-full h-10 px-4 flex items-center gap-1 hover:bg-surface-container-low transition-colors uppercase tracking-wider text-label-metadata font-label-metadata"
-                    title="Trier par numéro de carton"
-                  >
-                    N° Carton
-                    {triCarton === 'asc' && <ChevronUp size={14} />}
-                    {triCarton === 'desc' && <ChevronDown size={14} />}
-                    {triCarton === null && <ChevronsUpDown size={14} className="text-outline" />}
-                  </button>
-                </th>
+                <th className="px-4 h-10 font-medium w-[10%]">N° Carton</th>
                 <th className="px-4 h-10 font-medium w-[13%]">N° Décodeur</th>
                 <th className="px-4 h-10 font-medium w-[10%]">Date livraison</th>
                 <th className="px-4 h-10 font-medium w-[9%]">Statut</th>
