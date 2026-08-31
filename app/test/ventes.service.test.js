@@ -71,6 +71,39 @@ test('RG-02: vente apporteur sans nom d\'apporteur leve une erreur, aucune ecrit
   assert.equal(row.statut, 'en_stock'); // inchange
 });
 
+test('RG-01: un numero de serie jamais enregistre ne peut pas etre marque vendu (pas de creation implicite)', () => {
+  const db = creerBaseAvecDecodeur('24510284163959'); // decodeur existant, non concerne
+  delete require.cache[require.resolve('../src/main/services/ventes.service')];
+  const ventesService = require('../src/main/services/ventes.service');
+
+  const res = ventesService.marquerVendus({
+    numeros: ['00000000000000'], // jamais ajoute au stock
+    dateVente: '2026-06-10',
+    typeVente: 'equipe',
+  });
+
+  assert.equal(res.modifies, 0);
+  assert.deepEqual(res.nonTrouves, ['00000000000000']);
+  const row = db.prepare('SELECT * FROM decodeurs WHERE numero_serie = ?').get('00000000000000');
+  assert.equal(row, undefined, 'aucun decodeur ne doit avoir ete cree implicitement');
+});
+
+test('RG-01: un numero de serie jamais enregistre ne peut pas etre marque active (pas de creation implicite)', () => {
+  const db = creerBaseAvecDecodeur('24510284163959');
+  delete require.cache[require.resolve('../src/main/services/ventes.service')];
+  const ventesService = require('../src/main/services/ventes.service');
+
+  const res = ventesService.marquerActives({
+    numeros: ['00000000000000'],
+    dateActivation: '2026-06-10',
+  });
+
+  assert.equal(res.modifies, 0);
+  assert.deepEqual(res.nonTrouves, ['00000000000000']);
+  const row = db.prepare('SELECT * FROM decodeurs WHERE numero_serie = ?').get('00000000000000');
+  assert.equal(row, undefined, 'aucun decodeur ne doit avoir ete cree implicitement');
+});
+
 test('RG-05: un decodeur deja active n\'est pas repasse "vendu"', () => {
   const db = creerBaseAvecDecodeur('24510281884567', 'active');
   delete require.cache[require.resolve('../src/main/services/ventes.service')];

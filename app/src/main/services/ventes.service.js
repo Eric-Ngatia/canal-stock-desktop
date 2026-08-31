@@ -35,17 +35,24 @@ function marquerVendus({ numeros, dateVente, typeVente, apporteur, destinataire 
   const appliquer = db.transaction((liste) => {
     let modifies = 0;
     const bloques = [];
+    const nonTrouves = [];
     for (const numeroSerie of liste) {
-      const row = getStatut.get(numeroSerie.trim());
-      if (!row) continue; // numéro inconnu, ignoré silencieusement (pas de création implicite)
-      if (!transitionAutorisee(row.statut, 'vendu')) {
-        bloques.push(numeroSerie); // RG-05 : ex. déjà "active", on ne régresse pas
+      const n = numeroSerie.trim();
+      const row = getStatut.get(n);
+      if (!row) {
+        // RG-01 : un décodeur doit déjà être enregistré (réceptionné en stock) pour pouvoir
+        // être vendu — jamais de création implicite depuis la saisie de vente.
+        nonTrouves.push(n);
         continue;
       }
-      update.run(date, typeVente, apporteur || '', commission, destinataire || '', numeroSerie.trim());
+      if (!transitionAutorisee(row.statut, 'vendu')) {
+        bloques.push(n); // RG-05 : ex. déjà "active", on ne régresse pas
+        continue;
+      }
+      update.run(date, typeVente, apporteur || '', commission, destinataire || '', n);
       modifies += 1;
     }
-    return { modifies, bloques };
+    return { modifies, bloques, nonTrouves };
   });
 
   return appliquer(numeros);
@@ -68,14 +75,25 @@ function marquerActives({ numeros, dateActivation, source = 'manuel' }) {
 
   const appliquer = db.transaction((liste) => {
     let modifies = 0;
+    const dejaActifs = [];
+    const nonTrouves = [];
     for (const numeroSerie of liste) {
-      const row = getStatut.get(numeroSerie.trim());
-      if (!row) continue;
-      if (row.statut === 'active') continue; // déjà activé, RG-04/05 : idempotent, pas d'erreur
-      update.run(date, source, numeroSerie.trim());
+      const n = numeroSerie.trim();
+      const row = getStatut.get(n);
+      if (!row) {
+        // RG-01 : même garde-fou que marquerVendus — un décodeur non enregistré ne peut pas
+        // être activé, manuellement ou via import (RG-04).
+        nonTrouves.push(n);
+        continue;
+      }
+      if (row.statut === 'active') {
+        dejaActifs.push(n); // idempotent, pas une erreur
+        continue;
+      }
+      update.run(date, source, n);
       modifies += 1;
     }
-    return { modifies };
+    return { modifies, dejaActifs, nonTrouves };
   });
 
   return appliquer(numeros);

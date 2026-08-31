@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ShoppingCart, CheckCircle2, CalendarDays } from 'lucide-react';
+import { ShoppingCart, CheckCircle2, CalendarDays, AlertTriangle } from 'lucide-react';
 import { ventesApi, apporteursApi } from '../api/bridge.js';
 
 const inputClass =
@@ -7,6 +7,31 @@ const inputClass =
 
 function compterLignes(texte) {
   return texte.split('\n').map((l) => l.trim()).filter(Boolean).length;
+}
+
+// RG-01 : un décodeur doit déjà être enregistré (réceptionné en stock) pour pouvoir être vendu
+// ou activé — jamais de création implicite. `ventes.service.js` applique ce garde-fou et
+// renvoie `nonTrouves`/`bloques`/`dejaActifs` ; ces fonctions transforment ça en message lisible.
+function resumeVente(res) {
+  const parts = [`${res.modifies} décodeur(s) marqué(s) vendu(s)`];
+  if (res.nonTrouves?.length) {
+    parts.push(`${res.nonTrouves.length} numéro(s) non reconnu(s) (jamais enregistré au stock) : ${res.nonTrouves.join(', ')}`);
+  }
+  if (res.bloques?.length) {
+    parts.push(`${res.bloques.length} déjà activé(s), non modifié(s) : ${res.bloques.join(', ')}`);
+  }
+  return { texte: parts.join(' — '), attention: res.nonTrouves?.length > 0 || res.bloques?.length > 0 };
+}
+
+function resumeActivation(res) {
+  const parts = [`${res.modifies} décodeur(s) marqué(s) activé(s)`];
+  if (res.nonTrouves?.length) {
+    parts.push(`${res.nonTrouves.length} numéro(s) non reconnu(s) (jamais enregistré au stock) : ${res.nonTrouves.join(', ')}`);
+  }
+  if (res.dejaActifs?.length) {
+    parts.push(`${res.dejaActifs.length} déjà activé(s) (ignoré) : ${res.dejaActifs.join(', ')}`);
+  }
+  return { texte: parts.join(' — '), attention: res.nonTrouves?.length > 0 || res.dejaActifs?.length > 0 };
 }
 
 export default function VenteActivation() {
@@ -17,11 +42,11 @@ export default function VenteActivation() {
   const [dateVente, setDateVente] = useState(() => new Date().toISOString().slice(0, 10));
   const [destinataire, setDestinataire] = useState('');
   const [apporteursListe, setApporteursListe] = useState([]);
-  const [messageVente, setMessageVente] = useState('');
+  const [messageVente, setMessageVente] = useState(null);
 
   const [numerosActivation, setNumerosActivation] = useState('');
   const [dateActivation, setDateActivation] = useState(() => new Date().toISOString().slice(0, 10));
-  const [messageActivation, setMessageActivation] = useState('');
+  const [messageActivation, setMessageActivation] = useState(null);
 
   useEffect(() => {
     apporteursApi.lister().then(setApporteursListe);
@@ -37,7 +62,7 @@ export default function VenteActivation() {
       apporteur: typeVente === 'apporteur' ? apporteur : '',
       destinataire,
     });
-    setMessageVente(`Vente enregistrée avec succès (${res.modifies} unité${res.modifies > 1 ? 's' : ''})`);
+    setMessageVente(resumeVente(res));
     setNumerosVente('');
   };
 
@@ -45,7 +70,7 @@ export default function VenteActivation() {
     e.preventDefault();
     const numeros = numerosActivation.split('\n').map((n) => n.trim()).filter(Boolean);
     const res = await ventesApi.marquerActives({ numeros, dateActivation });
-    setMessageActivation(`${res.modifies} décodeur(s) marqué(s) activé(s)`);
+    setMessageActivation(resumeActivation(res));
     setNumerosActivation('');
   };
 
@@ -163,9 +188,13 @@ export default function VenteActivation() {
               Marquer comme vendu
             </button>
             {messageVente && (
-              <div className="flex items-center justify-center gap-2 text-status-green-text bg-status-green-bg px-4 py-2 rounded-lg mx-auto">
-                <CheckCircle2 size={18} />
-                <span className="text-sm font-medium">{messageVente}</span>
+              <div
+                className={`flex items-start gap-2 px-4 py-2 rounded-lg mx-auto ${
+                  messageVente.attention ? 'text-status-orange-text bg-status-orange-bg' : 'text-status-green-text bg-status-green-bg'
+                }`}
+              >
+                {messageVente.attention ? <AlertTriangle size={18} className="shrink-0 mt-0.5" /> : <CheckCircle2 size={18} className="shrink-0 mt-0.5" />}
+                <span className="text-sm font-medium">{messageVente.texte}</span>
               </div>
             )}
           </div>
@@ -227,9 +256,13 @@ export default function VenteActivation() {
             Marquer comme activé
           </button>
           {messageActivation && (
-            <div className="flex items-center justify-center gap-2 text-status-green-text bg-status-green-bg px-4 py-2 rounded-lg mx-auto">
-              <CheckCircle2 size={18} />
-              <span className="text-sm font-medium">{messageActivation}</span>
+            <div
+              className={`flex items-start gap-2 px-4 py-2 rounded-lg mx-auto ${
+                messageActivation.attention ? 'text-status-orange-text bg-status-orange-bg' : 'text-status-green-text bg-status-green-bg'
+              }`}
+            >
+              {messageActivation.attention ? <AlertTriangle size={18} className="shrink-0 mt-0.5" /> : <CheckCircle2 size={18} className="shrink-0 mt-0.5" />}
+              <span className="text-sm font-medium">{messageActivation.texte}</span>
             </div>
           )}
         </form>

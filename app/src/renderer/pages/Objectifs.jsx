@@ -133,6 +133,7 @@ export default function Objectifs() {
               <label className="font-label-metadata text-label-metadata text-secondary">Cible</label>
               <input
                 type="number"
+                min="0"
                 className="w-full h-10 px-3 border border-border-color rounded bg-surface-container-lowest text-body-table font-mono focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all"
                 value={cible}
                 onChange={(e) => setCible(e.target.value)}
