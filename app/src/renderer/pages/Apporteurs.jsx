@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2 } from 'lucide-react';
 import { apporteursApi } from '../api/bridge.js';
 
 export default function Apporteurs() {
   const [apporteurs, setApporteurs] = useState([]);
   const [nom, setNom] = useState('');
   const [telephone, setTelephone] = useState('');
+  const [editId, setEditId] = useState(null);
 
   const charger = () => apporteursApi.lister().then(setApporteurs);
 
@@ -13,18 +14,36 @@ export default function Apporteurs() {
     charger();
   }, []);
 
-  const ajouter = async (e) => {
+  const soumettre = async (e) => {
     e.preventDefault();
     if (!nom.trim()) return;
-    await apporteursApi.ajouter({ nom, telephone });
+    if (editId != null) {
+      await apporteursApi.modifier(editId, { nom, telephone });
+    } else {
+      await apporteursApi.ajouter({ nom, telephone });
+    }
     setNom('');
     setTelephone('');
+    setEditId(null);
     charger();
+  };
+
+  const modifier = (a) => {
+    setEditId(a.id);
+    setNom(a.nom);
+    setTelephone(a.telephone || '');
+  };
+
+  const annulerEdition = () => {
+    setEditId(null);
+    setNom('');
+    setTelephone('');
   };
 
   const supprimer = async (a) => {
     if (!window.confirm(`Supprimer l'apporteur « ${a.nom} » ? Cette action est irréversible.`)) return;
     await apporteursApi.supprimer(a.id);
+    if (editId === a.id) annulerEdition();
     charger();
   };
 
@@ -33,7 +52,15 @@ export default function Apporteurs() {
       <h1 className="font-page-title text-page-title text-on-surface">Apporteurs d'affaires</h1>
 
       <section className="bg-surface-container-lowest border border-border-color rounded-lg shadow-level-1 p-5">
-        <form onSubmit={ajouter} className="flex flex-col md:flex-row items-end gap-4">
+        {editId != null && (
+          <div className="mb-3 flex items-center justify-between">
+            <span className="font-label-metadata text-label-metadata text-primary uppercase">Modification en cours</span>
+            <button type="button" onClick={annulerEdition} className="text-xs text-secondary hover:text-on-surface underline">
+              Annuler
+            </button>
+          </div>
+        )}
+        <form onSubmit={soumettre} className="flex flex-col md:flex-row items-end gap-4">
           <div className="flex-1 w-full">
             <label className="block font-label-metadata text-label-metadata text-secondary mb-1 uppercase" htmlFor="nom">
               Nom
@@ -62,8 +89,8 @@ export default function Apporteurs() {
             type="submit"
             className="h-10 px-6 rounded bg-primary text-on-primary font-subtitle text-subtitle hover:bg-primary-container transition-colors flex items-center gap-2 whitespace-nowrap"
           >
-            <Plus size={18} />
-            Ajouter
+            {editId != null ? <Pencil size={18} /> : <Plus size={18} />}
+            {editId != null ? 'Mettre à jour' : 'Ajouter'}
           </button>
         </form>
       </section>
@@ -78,12 +105,17 @@ export default function Apporteurs() {
                 <th className="py-3 px-4 text-right">Ventes</th>
                 <th className="py-3 px-4 text-right">Activés</th>
                 <th className="py-3 px-4 text-right">Commissions dues</th>
-                <th className="py-3 px-4 w-12" />
+                <th className="py-3 px-4 w-20" />
               </tr>
             </thead>
             <tbody className="font-body-table text-body-table group/table">
               {apporteurs.map((a) => (
-                <tr key={a.id ?? a.nom} className="border-b border-border-color h-12 hover:bg-table-hover-bg transition-colors group">
+                <tr
+                  key={a.id ?? a.nom}
+                  className={`border-b border-border-color h-12 hover:bg-table-hover-bg transition-colors group ${
+                    editId === a.id ? 'bg-secondary-container' : ''
+                  }`}
+                >
                   <td className="py-2 px-4 text-on-surface font-medium">
                     {a.nom}{' '}
                     {a.nonReference && (
@@ -100,13 +132,22 @@ export default function Apporteurs() {
                   </td>
                   <td className="py-2 px-4 text-right">
                     {a.id != null && (
-                      <button
-                        onClick={() => supprimer(a)}
-                        className="opacity-0 group-hover:opacity-100 text-status-red-text hover:bg-status-red-bg p-1 rounded-full transition-opacity"
-                        title="Supprimer cet apporteur"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={() => modifier(a)}
+                          className="text-secondary hover:text-primary hover:bg-surface-container-low p-1 rounded-full transition-colors"
+                          title="Modifier cet apporteur"
+                        >
+                          <Pencil size={16} />
+                        </button>
+                        <button
+                          onClick={() => supprimer(a)}
+                          className="text-status-red-text hover:bg-status-red-bg p-1 rounded-full transition-colors"
+                          title="Supprimer cet apporteur"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     )}
                   </td>
                 </tr>

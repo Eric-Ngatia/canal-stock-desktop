@@ -39,6 +39,7 @@ export default function VenteActivation() {
   const [numerosVente, setNumerosVente] = useState('');
   const [typeVente, setTypeVente] = useState('equipe');
   const [apporteur, setApporteur] = useState('');
+  const [telephoneApporteur, setTelephoneApporteur] = useState('');
   const [dateVente, setDateVente] = useState(() => new Date().toISOString().slice(0, 10));
   const [destinataire, setDestinataire] = useState('');
   const [apporteursListe, setApporteursListe] = useState([]);
@@ -54,6 +55,19 @@ export default function VenteActivation() {
 
   const soumettreVente = async (e) => {
     e.preventDefault();
+
+    // Si l'apporteur saisi n'existe pas encore dans la liste officielle (nom libre accepté,
+    // cahier des charges §5.2), on l'enregistre au passage avec son téléphone — sinon il ne
+    // resterait référencé que par son nom (statut "non enregistré", sans téléphone) tant que
+    // personne ne passe manuellement par la page Apporteurs pour l'ajouter.
+    if (typeVente === 'apporteur' && apporteur.trim()) {
+      const dejaEnregistre = apporteursListe.some((a) => a.nom === apporteur.trim());
+      if (!dejaEnregistre) {
+        await apporteursApi.ajouter({ nom: apporteur.trim(), telephone: telephoneApporteur });
+        apporteursApi.lister().then(setApporteursListe);
+      }
+    }
+
     const numeros = numerosVente.split('\n').map((n) => n.trim()).filter(Boolean);
     const res = await ventesApi.marquerVendus({
       numeros,
@@ -146,23 +160,37 @@ export default function VenteActivation() {
           </div>
 
           {typeVente === 'apporteur' && (
-            <div className="flex flex-col gap-2">
-              <label className="font-label-metadata text-label-metadata text-secondary uppercase">
-                Nom de l'apporteur
-              </label>
-              <input
-                list="liste-apporteurs"
-                className={inputClass}
-                value={apporteur}
-                onChange={(e) => setApporteur(e.target.value)}
-                placeholder="Rechercher un apporteur..."
-                required
-              />
-              <datalist id="liste-apporteurs">
-                {apporteursListe.map((a) => (
-                  <option key={a.nom} value={a.nom} />
-                ))}
-              </datalist>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="flex flex-col gap-2">
+                <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+                  Nom de l'apporteur
+                </label>
+                <input
+                  list="liste-apporteurs"
+                  className={inputClass}
+                  value={apporteur}
+                  onChange={(e) => setApporteur(e.target.value)}
+                  placeholder="Rechercher un apporteur..."
+                  required
+                />
+                <datalist id="liste-apporteurs">
+                  {apporteursListe.map((a) => (
+                    <option key={a.nom} value={a.nom} />
+                  ))}
+                </datalist>
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="font-label-metadata text-label-metadata text-secondary uppercase">
+                  Téléphone <span className="normal-case opacity-60">(si nouvel apporteur)</span>
+                </label>
+                <input
+                  type="text"
+                  className={inputClass}
+                  value={telephoneApporteur}
+                  onChange={(e) => setTelephoneApporteur(e.target.value)}
+                  placeholder="Ex: +225 0102030405"
+                />
+              </div>
             </div>
           )}
 

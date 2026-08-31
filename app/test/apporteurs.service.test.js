@@ -87,3 +87,38 @@ test('resumeCommissions() renvoie des zeros sur une base sans vente apporteur', 
 
   assert.deepEqual(apporteursService.resumeCommissions(), { totalDu: 0, totalPaye: 0 });
 });
+
+test('modifier() met a jour nom et telephone', () => {
+  const { setDbForTests } = require('../src/main/db/database');
+  const apporteursService = require('../src/main/services/apporteurs.service');
+
+  setDbForTests(creerBaseTest());
+  const { id } = apporteursService.ajouter({ nom: 'Jean Dupont', telephone: '0700000000' });
+
+  const maj = apporteursService.modifier(id, { nom: 'Jean Dupont-Martin', telephone: '0711111111' });
+
+  assert.equal(maj.nom, 'Jean Dupont-Martin');
+  assert.equal(maj.telephone, '0711111111');
+});
+
+test('modifier() renomme aussi les decodeurs deja vendus sous l\'ancien nom (pas d\'orphelin)', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const apporteursService = require('../src/main/services/apporteurs.service');
+
+  setDbForTests(creerBaseTest());
+  const db = getDb();
+  const { id } = apporteursService.ajouter({ nom: 'Jean Dupont', telephone: '0700000000' });
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due)
+     VALUES (?, 'vendu', 'apporteur', 'Jean Dupont', 1500)`
+  ).run('SN1');
+
+  apporteursService.modifier(id, { nom: 'Jean D.', telephone: '0700000000' });
+
+  const [apporteur] = apporteursService.lister();
+  assert.equal(apporteur.nom, 'Jean D.');
+  assert.equal(apporteur.totalVentes, 1, 'la vente doit rester attribuee apres le renommage');
+
+  const decodeur = db.prepare('SELECT apporteur FROM decodeurs WHERE numero_serie = ?').get('SN1');
+  assert.equal(decodeur.apporteur, 'Jean D.');
+});

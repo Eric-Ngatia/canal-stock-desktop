@@ -53,6 +53,30 @@ function supprimer(id) {
 }
 
 /**
+ * Modifie le nom et/ou le téléphone d'un apporteur déjà enregistré.
+ *
+ * `decodeurs.apporteur` est dénormalisé (texte libre, pas une clé étrangère — cf. cahier des
+ * charges §5.2 « apporteur non enregistré accepté ») : si le nom change, on répercute le
+ * renommage sur les décodeurs déjà vendus sous l'ancien nom, sinon leur attribution
+ * (commissions, historique) se retrouverait orpheline sous un nom qui n'existe plus.
+ */
+function modifier(id, { nom, telephone }) {
+  const db = getDb();
+  const actuel = db.prepare('SELECT nom FROM apporteurs WHERE id = ?').get(id);
+  if (!actuel) throw new Error('Apporteur introuvable');
+
+  const appliquer = db.transaction(() => {
+    db.prepare('UPDATE apporteurs SET nom = ?, telephone = ? WHERE id = ?').run(nom, telephone || '', id);
+    if (nom !== actuel.nom) {
+      db.prepare('UPDATE decodeurs SET apporteur = ? WHERE apporteur = ?').run(nom, actuel.nom);
+    }
+  });
+  appliquer();
+
+  return db.prepare('SELECT * FROM apporteurs WHERE id = ?').get(id);
+}
+
+/**
  * Total des commissions dues aux apporteurs, dû vs déjà payé (colonne `commission_payee`
  * du schéma initial). Lecture seule — aucune action « marquer payé » en Phase 1.
  */
@@ -74,4 +98,4 @@ function resumeCommissions() {
   return { totalDu, totalPaye };
 }
 
-module.exports = { lister, ajouter, supprimer, resumeCommissions };
+module.exports = { lister, ajouter, supprimer, modifier, resumeCommissions };

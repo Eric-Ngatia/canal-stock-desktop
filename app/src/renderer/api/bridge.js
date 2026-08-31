@@ -28,6 +28,7 @@ export const apporteursApi = {
   lister: () => api.apporteurs.lister(),
   ajouter: (payload) => api.apporteurs.ajouter(payload),
   supprimer: (id) => api.apporteurs.supprimer(id),
+  modifier: (id, payload) => api.apporteurs.modifier(id, payload),
   resumeCommissions: () => api.apporteurs.resumeCommissions(),
 };
 
