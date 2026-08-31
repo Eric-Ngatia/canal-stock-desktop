@@ -119,28 +119,46 @@ export default function Dashboard() {
           <h2 className="font-subtitle text-subtitle text-on-surface mb-6">
             Objectif du mois {objectif ? `(${objectif.mois}/${objectif.annee})` : ''}
           </h2>
-          <div className="flex items-end gap-6 mb-4 flex-wrap">
-            <span className="text-6xl font-bold tracking-tighter text-status-green-text tabular-nums leading-none">
-              {objectif?.pourcentage ?? 0}%
-            </span>
-            <div className="pb-1">
-              <span className="font-body-table text-body-table text-secondary block mb-1">
-                Décodeurs vendus ce mois
+          {objectif && !objectif.defini ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2 text-status-orange-text bg-status-orange-bg px-4 py-3 rounded-lg w-fit">
+                <AlertTriangle size={18} />
+                <span className="text-sm font-medium">Aucun objectif défini pour ce mois</span>
+              </div>
+              <span className="font-body-table text-body-table text-secondary">
+                {objectif.realise} décodeur(s) vendu(s) ce mois-ci, sans cible à comparer.
               </span>
-              <span className="font-subtitle text-subtitle text-on-surface tabular-nums">
-                {objectif?.realise ?? 0}{' '}
-                <span className="text-secondary font-body-table text-body-table">
-                  / {objectif?.cible || '?'}
+              {objectif.prochain && (
+                <span className="font-body-table text-body-table text-secondary">
+                  Objectif du mois prochain ({objectif.prochain.mois}/{objectif.prochain.annee}) déjà défini :{' '}
+                  <span className="font-medium text-on-surface">{objectif.prochain.cible} décodeurs</span>.
                 </span>
-              </span>
+              )}
             </div>
-          </div>
-          <div className="w-full bg-border-color rounded-full h-4 overflow-hidden">
-            <div
-              className="bg-status-green-text h-full rounded-full transition-all duration-1000 ease-out"
-              style={{ width: `${Math.min(objectif?.pourcentage ?? 0, 100)}%` }}
-            />
-          </div>
+          ) : (
+            <>
+              <div className="flex items-end gap-6 mb-4 flex-wrap">
+                <span className="text-6xl font-bold tracking-tighter text-status-green-text tabular-nums leading-none">
+                  {objectif?.pourcentage ?? 0}%
+                </span>
+                <div className="pb-1">
+                  <span className="font-body-table text-body-table text-secondary block mb-1">
+                    Décodeurs vendus ce mois
+                  </span>
+                  <span className="font-subtitle text-subtitle text-on-surface tabular-nums">
+                    {objectif?.realise ?? 0}{' '}
+                    <span className="text-secondary font-body-table text-body-table">/ {objectif?.cible ?? 0}</span>
+                  </span>
+                </div>
+              </div>
+              <div className="w-full bg-border-color rounded-full h-4 overflow-hidden">
+                <div
+                  className="bg-status-green-text h-full rounded-full transition-all duration-1000 ease-out"
+                  style={{ width: `${Math.min(objectif?.pourcentage ?? 0, 100)}%` }}
+                />
+              </div>
+            </>
+          )}
         </div>
 
         <div className="bg-surface-container-lowest border border-border-color rounded-lg p-6 shadow-level-1 flex flex-col">

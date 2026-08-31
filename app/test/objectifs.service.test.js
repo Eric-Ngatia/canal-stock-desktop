@@ -72,6 +72,41 @@ test("lister() calcule atteint/realise/pourcentage par mois a partir des vraies 
   assert.equal(fevrier.atteint, false);
 });
 
+test("courant() signale defini=false et l'objectif deja prevu pour le mois prochain", () => {
+  creerBaseTest();
+  const objectifsService = chargerObjectifsService();
+
+  const now = new Date();
+  const mois = now.getMonth() + 1;
+  const annee = now.getFullYear();
+  const moisProchain = mois === 12 ? 1 : mois + 1;
+  const anneeProchain = mois === 12 ? annee + 1 : annee;
+
+  // Objectif saisi pour le mois SUIVANT le mois en cours, jamais pour le mois en cours.
+  objectifsService.definir({ mois: moisProchain, annee: anneeProchain, cible: 2000 });
+
+  const resultat = objectifsService.courant();
+  assert.equal(resultat.defini, false, "aucun objectif n'est defini pour le mois en cours");
+  assert.equal(resultat.cible, 0);
+  assert.deepEqual(resultat.prochain, { mois: moisProchain, annee: anneeProchain, cible: 2000 });
+});
+
+test('courant() signale defini=true et prochain=null quand seul le mois en cours est defini', () => {
+  creerBaseTest();
+  const objectifsService = chargerObjectifsService();
+
+  const now = new Date();
+  const mois = now.getMonth() + 1;
+  const annee = now.getFullYear();
+
+  objectifsService.definir({ mois, annee, cible: 100 });
+
+  const resultat = objectifsService.courant();
+  assert.equal(resultat.defini, true);
+  assert.equal(resultat.cible, 100);
+  assert.equal(resultat.prochain, null);
+});
+
 test('supprimer() retire un objectif de la liste sans toucher aux autres', () => {
   const db = creerBaseTest();
   const objectifsService = chargerObjectifsService();

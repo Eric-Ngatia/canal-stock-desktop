@@ -65,12 +65,23 @@ function courant() {
   const cible = objectif?.cible || 0;
   const realise = realiseDuMois(mois, annee);
 
+  // Si rien n'est défini pour le mois en cours, un objectif existe parfois déjà pour le mois
+  // suivant (saisi en avance, ex. fin de mois) — le signaler évite de faire croire que la
+  // saisie a été perdue quand le dashboard affiche juste "aucun objectif pour ce mois-ci".
+  const moisProchain = mois === 12 ? 1 : mois + 1;
+  const anneeProchain = mois === 12 ? annee + 1 : annee;
+  const objectifProchain = db
+    .prepare('SELECT * FROM objectifs WHERE mois = ? AND annee = ?')
+    .get(moisProchain, anneeProchain);
+
   return {
     mois,
     annee,
     cible,
     realise,
     pourcentage: cible ? Math.round((realise / cible) * 100) : 0,
+    defini: !!objectif,
+    prochain: objectifProchain ? { mois: moisProchain, annee: anneeProchain, cible: objectifProchain.cible } : null,
   };
 }
 
