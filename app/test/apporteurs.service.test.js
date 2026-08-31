@@ -88,6 +88,71 @@ test('resumeCommissions() renvoie des zeros sur une base sans vente apporteur', 
   assert.deepEqual(apporteursService.resumeCommissions(), { totalDu: 0, totalPaye: 0 });
 });
 
+test('lister() distingue totalPaye de totalCommissions (montant total)', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const apporteursService = require('../src/main/services/apporteurs.service');
+
+  setDbForTests(creerBaseTest());
+  const db = getDb();
+  apporteursService.ajouter({ nom: 'Jean Dupont', telephone: '0700000000' });
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due, commission_payee)
+     VALUES (?, 'vendu', 'apporteur', 'Jean Dupont', 1500, 0)`
+  ).run('SN1');
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due, commission_payee)
+     VALUES (?, 'active', 'apporteur', 'Jean Dupont', 1500, 1)`
+  ).run('SN2');
+
+  const [jean] = apporteursService.lister();
+  assert.equal(jean.totalCommissions, 3000);
+  assert.equal(jean.totalPaye, 1500);
+});
+
+test('marquerCommissionsPayees() solde tout le du restant d\'un apporteur, sans toucher aux autres', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const apporteursService = require('../src/main/services/apporteurs.service');
+
+  setDbForTests(creerBaseTest());
+  const db = getDb();
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due, commission_payee)
+     VALUES (?, 'vendu', 'apporteur', 'Jean Dupont', 1500, 0)`
+  ).run('SN1');
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due, commission_payee)
+     VALUES (?, 'active', 'apporteur', 'Jean Dupont', 1500, 1)`
+  ).run('SN2'); // deja payee, ne doit pas etre recomptee
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due, commission_payee)
+     VALUES (?, 'vendu', 'apporteur', 'Marie Kouassi', 1500, 0)`
+  ).run('SN3'); // autre apporteur, ne doit pas etre affecte
+
+  const res = apporteursService.marquerCommissionsPayees('Jean Dupont');
+  assert.equal(res.modifies, 1, 'seule SN1 restait a payer pour Jean Dupont');
+
+  const [jean] = apporteursService.lister().filter((a) => a.nom === 'Jean Dupont');
+  assert.equal(jean.totalPaye, 3000, 'les deux commissions de Jean Dupont sont maintenant payees');
+
+  const [marie] = apporteursService.lister().filter((a) => a.nom === 'Marie Kouassi');
+  assert.equal(marie.totalPaye, 0, 'Marie Kouassi non concernee par le paiement de Jean Dupont');
+});
+
+test('marquerCommissionsPayees() fonctionne aussi pour un apporteur non enregistre', () => {
+  const { setDbForTests, getDb } = require('../src/main/db/database');
+  const apporteursService = require('../src/main/services/apporteurs.service');
+
+  setDbForTests(creerBaseTest());
+  const db = getDb();
+  db.prepare(
+    `INSERT INTO decodeurs (numero_serie, statut, type_vente, apporteur, commission_due, commission_payee)
+     VALUES (?, 'vendu', 'apporteur', 'Sans Nom SARL', 1500, 0)`
+  ).run('SN1');
+
+  const res = apporteursService.marquerCommissionsPayees('Sans Nom SARL');
+  assert.equal(res.modifies, 1);
+});
+
 test('modifier() met a jour nom et telephone', () => {
   const { setDbForTests } = require('../src/main/db/database');
   const apporteursService = require('../src/main/services/apporteurs.service');

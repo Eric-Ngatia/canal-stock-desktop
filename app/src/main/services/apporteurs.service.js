@@ -7,6 +7,7 @@ function lister() {
   const stats = db
     .prepare(
       `SELECT apporteur AS nom, COUNT(*) AS totalVentes, SUM(commission_due) AS totalCommissions,
+              SUM(CASE WHEN commission_payee = 1 THEN commission_due ELSE 0 END) AS totalPaye,
               SUM(CASE WHEN statut = 'active' THEN 1 ELSE 0 END) AS totalActives
        FROM decodeurs
        WHERE type_vente = 'apporteur' AND apporteur != ''
@@ -21,6 +22,7 @@ function lister() {
     ...a,
     totalVentes: statMap[a.nom]?.totalVentes || 0,
     totalCommissions: statMap[a.nom]?.totalCommissions || 0,
+    totalPaye: statMap[a.nom]?.totalPaye || 0,
     totalActives: statMap[a.nom]?.totalActives || 0,
   }));
 
@@ -33,6 +35,7 @@ function lister() {
       nonReference: true,
       totalVentes: s.totalVentes,
       totalCommissions: s.totalCommissions,
+      totalPaye: s.totalPaye || 0,
       totalActives: s.totalActives,
     }));
 
@@ -98,4 +101,21 @@ function resumeCommissions() {
   return { totalDu, totalPaye };
 }
 
-module.exports = { lister, ajouter, supprimer, modifier, resumeCommissions };
+/**
+ * Solde d'un coup toutes les commissions encore dues d'un apporteur (paiement groupé — c'est
+ * ainsi qu'un apporteur est réglé en pratique, pas décodeur par décodeur). Fonctionne aussi
+ * pour un apporteur "non enregistré" (texte libre, pas de ligne dans `apporteurs`) : la
+ * commission est portée par `decodeurs.apporteur`, pas par une relation vers `apporteurs.id`.
+ */
+function marquerCommissionsPayees(nom) {
+  const db = getDb();
+  const { changes } = db
+    .prepare(
+      `UPDATE decodeurs SET commission_payee = 1, updated_at = datetime('now')
+       WHERE apporteur = ? AND type_vente = 'apporteur' AND commission_payee = 0`
+    )
+    .run(nom);
+  return { modifies: changes };
+}
+
+module.exports = { lister, ajouter, supprimer, modifier, resumeCommissions, marquerCommissionsPayees };

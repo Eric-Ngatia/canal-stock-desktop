@@ -27,6 +27,7 @@ contextBridge.exposeInMainWorld('api', {
     supprimer: (id) => ipcRenderer.invoke('canal:apporteurs:supprimer', id),
     modifier: (id, payload) => ipcRenderer.invoke('canal:apporteurs:modifier', { id, ...payload }),
     resumeCommissions: () => ipcRenderer.invoke('canal:apporteurs:resumeCommissions'),
+    marquerCommissionsPayees: (nom) => ipcRenderer.invoke('canal:apporteurs:marquerCommissionsPayees', nom),
   },
   objectifs: {
     definir: (payload) => ipcRenderer.invoke('canal:objectifs:definir', payload),

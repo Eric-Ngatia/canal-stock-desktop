@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Pencil, Trash2 } from 'lucide-react';
+import { Plus, Pencil, Trash2, HandCoins } from 'lucide-react';
 import { apporteursApi } from '../api/bridge.js';
 
 export default function Apporteurs() {
@@ -44,6 +44,13 @@ export default function Apporteurs() {
     if (!window.confirm(`Supprimer l'apporteur « ${a.nom} » ? Cette action est irréversible.`)) return;
     await apporteursApi.supprimer(a.id);
     if (editId === a.id) annulerEdition();
+    charger();
+  };
+
+  const marquerPaye = async (a) => {
+    const restant = (a.totalCommissions || 0) - (a.totalPaye || 0);
+    if (!window.confirm(`Marquer ${restant.toLocaleString('fr-FR')} FCFA comme payés à « ${a.nom} » ?`)) return;
+    await apporteursApi.marquerCommissionsPayees(a.nom);
     charger();
   };
 
@@ -104,8 +111,8 @@ export default function Apporteurs() {
                 <th className="py-3 px-4">Téléphone</th>
                 <th className="py-3 px-4 text-right">Ventes</th>
                 <th className="py-3 px-4 text-right">Activés</th>
-                <th className="py-3 px-4 text-right">Commissions dues</th>
-                <th className="py-3 px-4 w-20" />
+                <th className="py-3 px-4 text-right">Commissions</th>
+                <th className="py-3 px-4 w-28" />
               </tr>
             </thead>
             <tbody className="font-body-table text-body-table group/table">
@@ -127,28 +134,47 @@ export default function Apporteurs() {
                   <td className="py-2 px-4 text-secondary tabular-nums">{a.telephone || '-'}</td>
                   <td className="py-2 px-4 text-on-surface tabular-nums text-right">{a.totalVentes}</td>
                   <td className="py-2 px-4 text-on-surface tabular-nums text-right">{a.totalActives}</td>
-                  <td className="py-2 px-4 text-on-surface tabular-nums text-right font-bold">
-                    {(a.totalCommissions || 0).toLocaleString('fr-FR')} FCFA
-                  </td>
                   <td className="py-2 px-4 text-right">
-                    {a.id != null && (
-                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button
-                          onClick={() => modifier(a)}
-                          className="text-secondary hover:text-primary hover:bg-surface-container-low p-1 rounded-full transition-colors"
-                          title="Modifier cet apporteur"
-                        >
-                          <Pencil size={16} />
-                        </button>
-                        <button
-                          onClick={() => supprimer(a)}
-                          className="text-status-red-text hover:bg-status-red-bg p-1 rounded-full transition-colors"
-                          title="Supprimer cet apporteur"
-                        >
-                          <Trash2 size={16} />
-                        </button>
+                    <div className="font-bold text-on-surface tabular-nums">
+                      {((a.totalCommissions || 0) - (a.totalPaye || 0)).toLocaleString('fr-FR')} FCFA
+                      <span className="text-xs text-secondary font-normal ml-1">dû</span>
+                    </div>
+                    {a.totalPaye > 0 && (
+                      <div className="text-xs text-status-green-text tabular-nums">
+                        {a.totalPaye.toLocaleString('fr-FR')} FCFA payé
                       </div>
                     )}
+                  </td>
+                  <td className="py-2 px-4 text-right">
+                    <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {(a.totalCommissions || 0) - (a.totalPaye || 0) > 0 && (
+                        <button
+                          onClick={() => marquerPaye(a)}
+                          className="text-secondary hover:text-status-green-text hover:bg-status-green-bg p-1 rounded-full transition-colors"
+                          title="Marquer les commissions dues comme payées"
+                        >
+                          <HandCoins size={16} />
+                        </button>
+                      )}
+                      {a.id != null && (
+                        <>
+                          <button
+                            onClick={() => modifier(a)}
+                            className="text-secondary hover:text-primary hover:bg-surface-container-low p-1 rounded-full transition-colors"
+                            title="Modifier cet apporteur"
+                          >
+                            <Pencil size={16} />
+                          </button>
+                          <button
+                            onClick={() => supprimer(a)}
+                            className="text-status-red-text hover:bg-status-red-bg p-1 rounded-full transition-colors"
+                            title="Supprimer cet apporteur"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}

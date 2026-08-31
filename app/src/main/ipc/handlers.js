@@ -44,6 +44,7 @@ function enregistrerHandlers() {
   ipcMain.handle('canal:apporteurs:ajouter', (_e, payload) => apporteursService.ajouter(payload));
   ipcMain.handle('canal:apporteurs:supprimer', (_e, id) => apporteursService.supprimer(id));
   ipcMain.handle('canal:apporteurs:modifier', (_e, { id, ...payload }) => apporteursService.modifier(id, payload));
+  ipcMain.handle('canal:apporteurs:marquerCommissionsPayees', (_e, nom) => apporteursService.marquerCommissionsPayees(nom));
   ipcMain.handle('canal:apporteurs:resumeCommissions', () => apporteursService.resumeCommissions());
 
   // Objectifs

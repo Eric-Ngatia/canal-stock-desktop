@@ -30,6 +30,7 @@ export const apporteursApi = {
   supprimer: (id) => api.apporteurs.supprimer(id),
   modifier: (id, payload) => api.apporteurs.modifier(id, payload),
   resumeCommissions: () => api.apporteurs.resumeCommissions(),
+  marquerCommissionsPayees: (nom) => api.apporteurs.marquerCommissionsPayees(nom),
 };
 
 export const objectifsApi = {
