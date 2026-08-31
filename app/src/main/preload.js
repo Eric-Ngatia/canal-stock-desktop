@@ -43,4 +43,8 @@ contextBridge.exposeInMainWorld('api', {
     choisirFichierRestauration: () => ipcRenderer.invoke('canal:export:choisirFichierRestauration'),
     restaurer: (cheminSauvegarde) => ipcRenderer.invoke('canal:export:restaurer', cheminSauvegarde),
   },
+  reinitialisation: {
+    apercu: () => ipcRenderer.invoke('canal:reinitialisation:apercu'),
+    nouvelleAnnee: (dossierSauvegarde) => ipcRenderer.invoke('canal:reinitialisation:nouvelleAnnee', dossierSauvegarde),
+  },
 });

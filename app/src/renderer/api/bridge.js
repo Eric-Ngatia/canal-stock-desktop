@@ -48,3 +48,8 @@ export const exportApi = {
   choisirFichierRestauration: () => api.export.choisirFichierRestauration(),
   restaurer: (cheminSauvegarde) => api.export.restaurer(cheminSauvegarde),
 };
+
+export const reinitialisationApi = {
+  apercu: () => api.reinitialisation.apercu(),
+  nouvelleAnnee: (dossierSauvegarde) => api.reinitialisation.nouvelleAnnee(dossierSauvegarde),
+};
