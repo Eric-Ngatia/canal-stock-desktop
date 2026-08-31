@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, ScanBarcode, ChevronDown } from 'lucide-react';
+import { Plus, ScanBarcode, ChevronDown, ChevronUp, ChevronsUpDown } from 'lucide-react';
 import { decodeursApi } from '../api/bridge.js';
 
 const STATUT_LABEL = { en_stock: 'En stock', vendu: 'Vendu', active: 'Activé' };
@@ -19,6 +19,7 @@ export default function Stock() {
   const [cartonCode, setCartonCode] = useState('');
   const [dateLivraison, setDateLivraison] = useState('');
   const [page, setPage] = useState(1);
+  const [triCarton, setTriCarton] = useState(null); // null | 'asc' | 'desc'
 
   const charger = async () => {
     setItems(await decodeursApi.lister({ statut: filtreStatut || undefined, q: q || undefined }));
@@ -38,8 +39,21 @@ export default function Stock() {
     charger();
   };
 
-  const nbPages = Math.max(1, Math.ceil(items.length / PAGE_SIZE));
-  const pageItems = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  // Cycle asc -> desc -> pas de tri (retour à l'ordre par défaut du service : plus récent d'abord).
+  const basculerTriCarton = () => {
+    setTriCarton((t) => (t === null ? 'asc' : t === 'asc' ? 'desc' : null));
+    setPage(1);
+  };
+
+  const itemsAffiches = triCarton
+    ? [...items].sort((a, b) => {
+        const cmp = (a.carton_code || '').localeCompare(b.carton_code || '', undefined, { numeric: true, sensitivity: 'base' });
+        return triCarton === 'asc' ? cmp : -cmp;
+      })
+    : items;
+
+  const nbPages = Math.max(1, Math.ceil(itemsAffiches.length / PAGE_SIZE));
+  const pageItems = itemsAffiches.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   return (
     <div className="flex flex-col gap-6">
@@ -138,7 +152,19 @@ export default function Stock() {
           <table className="w-full text-left border-collapse table-fixed">
             <thead>
               <tr className="bg-table-header-bg border-b border-border-color text-label-metadata font-label-metadata text-secondary uppercase tracking-wider">
-                <th className="px-4 h-10 font-medium w-[10%]">N° Carton</th>
+                <th className="px-4 h-10 font-medium w-[10%] p-0">
+                  <button
+                    type="button"
+                    onClick={basculerTriCarton}
+                    className="w-full h-10 px-4 flex items-center gap-1 hover:bg-surface-container-low transition-colors uppercase tracking-wider text-label-metadata font-label-metadata"
+                    title="Trier par numéro de carton"
+                  >
+                    N° Carton
+                    {triCarton === 'asc' && <ChevronUp size={14} />}
+                    {triCarton === 'desc' && <ChevronDown size={14} />}
+                    {triCarton === null && <ChevronsUpDown size={14} className="text-outline" />}
+                  </button>
+                </th>
                 <th className="px-4 h-10 font-medium w-[13%]">N° Décodeur</th>
                 <th className="px-4 h-10 font-medium w-[10%]">Date livraison</th>
                 <th className="px-4 h-10 font-medium w-[9%]">Statut</th>
