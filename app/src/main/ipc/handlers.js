@@ -1,4 +1,4 @@
-const { ipcMain, dialog } = require('electron');
+const { ipcMain, dialog, app } = require('electron');
 const fs = require('fs');
 
 const decodeursService = require('../services/decodeurs.service');
@@ -67,6 +67,22 @@ function enregistrerHandlers() {
     });
     if (result.canceled || !result.filePath) return null;
     return exportService.exporterExcel(result.filePath);
+  });
+  ipcMain.handle('canal:export:choisirFichierRestauration', async () => {
+    const result = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [{ name: 'Sauvegarde SQLite', extensions: ['sqlite'] }],
+    });
+    if (result.canceled || result.filePaths.length === 0) return null;
+    return result.filePaths[0];
+  });
+  ipcMain.handle('canal:export:restaurer', (_e, cheminSauvegarde) => {
+    const resultat = exportService.restaurerSauvegarde(cheminSauvegarde);
+    // Redémarrage obligatoire : `getDb()` doit rouvrir le fichier fraîchement restauré dans
+    // un process neuf (better-sqlite3 ne permet pas de "recharger" un handle proprement).
+    app.relaunch();
+    app.exit(0);
+    return resultat;
   });
 }
 

@@ -44,4 +44,6 @@ export const exportApi = {
   choisirDossier: () => api.export.choisirDossier(),
   sauvegarde: (dossier) => api.export.sauvegarde(dossier),
   excel: () => api.export.excel(),
+  choisirFichierRestauration: () => api.export.choisirFichierRestauration(),
+  restaurer: (cheminSauvegarde) => api.export.restaurer(cheminSauvegarde),
 };
