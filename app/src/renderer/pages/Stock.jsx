@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, ScanBarcode, ChevronDown } from 'lucide-react';
+import { Plus, ScanBarcode, ChevronDown, Pencil, Trash2, Check, X } from 'lucide-react';
 import { decodeursApi } from '../api/bridge.js';
 
 const STATUT_LABEL = { en_stock: 'En stock', vendu: 'Vendu', active: 'Activé' };
@@ -20,6 +20,12 @@ export default function Stock() {
   const [dateLivraison, setDateLivraison] = useState('');
   const [page, setPage] = useState(1);
   const [filtreCarton, setFiltreCarton] = useState(''); // '' = tous les cartons, sinon un code precis
+
+  const [editId, setEditId] = useState(null);
+  const [editCartonCode, setEditCartonCode] = useState('');
+  const [editNumeroSerie, setEditNumeroSerie] = useState('');
+  const [editDateLivraison, setEditDateLivraison] = useState('');
+  const [editDestinataire, setEditDestinataire] = useState('');
 
   const charger = async () => {
     setItems(await decodeursApi.lister({ statut: filtreStatut || undefined, q: q || undefined }));
@@ -45,6 +51,39 @@ export default function Stock() {
     await decodeursApi.ajouterLot({ numeros, cartonCode, dateLivraison });
     setBulkText('');
     setShowAdd(false);
+    charger();
+  };
+
+  const demarrerEdition = (d) => {
+    setEditId(d.id);
+    setEditCartonCode(d.carton_code || '');
+    setEditNumeroSerie(d.numero_serie || '');
+    setEditDateLivraison(d.date_livraison || '');
+    setEditDestinataire(d.destinataire || '');
+  };
+
+  const annulerEdition = () => setEditId(null);
+
+  const enregistrerEdition = async () => {
+    if (!editNumeroSerie.trim()) return;
+    try {
+      await decodeursApi.modifier(editId, {
+        numeroSerie: editNumeroSerie,
+        cartonCode: editCartonCode,
+        dateLivraison: editDateLivraison,
+        destinataire: editDestinataire,
+      });
+      setEditId(null);
+      charger();
+    } catch (err) {
+      window.alert(err.message || 'Échec de la modification');
+    }
+  };
+
+  const supprimerDecodeur = async (d) => {
+    if (!window.confirm(`Supprimer le décodeur « ${d.numero_serie} » ? Cette action est irréversible.`)) return;
+    await decodeursApi.supprimer(d.id);
+    if (editId === d.id) setEditId(null);
     charger();
   };
 
@@ -174,36 +213,105 @@ export default function Stock() {
           <table className="w-full text-left border-collapse table-fixed">
             <thead>
               <tr className="bg-table-header-bg border-b border-border-color text-label-metadata font-label-metadata text-secondary uppercase tracking-wider">
-                <th className="px-4 h-10 font-medium w-[10%]">N° Carton</th>
-                <th className="px-4 h-10 font-medium w-[13%]">N° Décodeur</th>
-                <th className="px-4 h-10 font-medium w-[10%]">Date livraison</th>
-                <th className="px-4 h-10 font-medium w-[9%]">Statut</th>
-                <th className="px-4 h-10 font-medium w-[10%]">Date vente</th>
-                <th className="px-4 h-10 font-medium w-[19%]">Apporteur/Vendeur</th>
-                <th className="px-4 h-10 font-medium w-[10%]">Date activation</th>
-                <th className="px-4 h-10 font-medium w-[19%]">Destinataire</th>
+                <th className="px-4 h-10 font-medium w-[9%]">N° Carton</th>
+                <th className="px-4 h-10 font-medium w-[12%]">N° Décodeur</th>
+                <th className="px-4 h-10 font-medium w-[9%]">Date livraison</th>
+                <th className="px-4 h-10 font-medium w-[8%]">Statut</th>
+                <th className="px-4 h-10 font-medium w-[9%]">Date vente</th>
+                <th className="px-4 h-10 font-medium w-[16%]">Apporteur/Vendeur</th>
+                <th className="px-4 h-10 font-medium w-[9%]">Date activation</th>
+                <th className="px-4 h-10 font-medium w-[16%]">Destinataire</th>
+                <th className="px-4 h-10 font-medium w-[12%] text-right">Actions</th>
               </tr>
             </thead>
             <tbody className="font-body-table text-body-table text-on-surface">
-              {pageItems.map((d) => (
-                <tr key={d.id} className={`row-${d.statut} border-b border-border-color hover:bg-table-hover-bg transition-colors`}>
-                  <td className="px-4 py-2 break-words">{d.carton_code}</td>
-                  <td className="px-4 py-2 font-mono text-xs break-all">{d.numero_serie}</td>
-                  <td className="px-4 py-2 text-secondary break-words">{d.date_livraison || '-'}</td>
-                  <td className="px-4 py-2">
-                    <span className={`${BADGE_CLASS[d.statut]} px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider whitespace-nowrap`}>
-                      {STATUT_LABEL[d.statut]}
-                    </span>
-                  </td>
-                  <td className="px-4 py-2 text-secondary break-words">{d.date_vente || '-'}</td>
-                  <td className="px-4 py-2 text-secondary break-words">{d.apporteur || '-'}</td>
-                  <td className="px-4 py-2 text-secondary break-words">{d.date_activation || '-'}</td>
-                  <td className="px-4 py-2 text-secondary break-words">{d.destinataire || '-'}</td>
-                </tr>
-              ))}
+              {pageItems.map((d) => {
+                const enEdition = editId === d.id;
+                const champEditClass =
+                  'w-full h-8 px-2 rounded border border-border-color bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none font-body-table text-body-table';
+                return (
+                  <tr key={d.id} className={`row-${d.statut} border-b border-border-color hover:bg-table-hover-bg transition-colors ${enEdition ? 'bg-secondary-container' : ''}`}>
+                    <td className="px-4 py-2 break-words">
+                      {enEdition ? (
+                        <input className={champEditClass} value={editCartonCode} onChange={(e) => setEditCartonCode(e.target.value)} />
+                      ) : (
+                        d.carton_code
+                      )}
+                    </td>
+                    <td className="px-4 py-2 font-mono text-xs break-all">
+                      {enEdition ? (
+                        <input className={champEditClass} value={editNumeroSerie} onChange={(e) => setEditNumeroSerie(e.target.value)} />
+                      ) : (
+                        d.numero_serie
+                      )}
+                    </td>
+                    <td className="px-4 py-2 text-secondary break-words">
+                      {enEdition ? (
+                        <input type="date" className={champEditClass} value={editDateLivraison} onChange={(e) => setEditDateLivraison(e.target.value)} />
+                      ) : (
+                        d.date_livraison || '-'
+                      )}
+                    </td>
+                    <td className="px-4 py-2">
+                      <span className={`${BADGE_CLASS[d.statut]} px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider whitespace-nowrap`}>
+                        {STATUT_LABEL[d.statut]}
+                      </span>
+                    </td>
+                    <td className="px-4 py-2 text-secondary break-words">{d.date_vente || '-'}</td>
+                    <td className="px-4 py-2 text-secondary break-words">{d.apporteur || '-'}</td>
+                    <td className="px-4 py-2 text-secondary break-words">{d.date_activation || '-'}</td>
+                    <td className="px-4 py-2 text-secondary break-words">
+                      {enEdition ? (
+                        <input className={champEditClass} value={editDestinataire} onChange={(e) => setEditDestinataire(e.target.value)} />
+                      ) : (
+                        d.destinataire || '-'
+                      )}
+                    </td>
+                    <td className="px-4 py-2">
+                      <div className="flex items-center justify-end gap-1">
+                        {enEdition ? (
+                          <>
+                            <button
+                              onClick={enregistrerEdition}
+                              className="text-status-green-text hover:bg-status-green-bg p-1 rounded-full transition-colors"
+                              title="Enregistrer"
+                            >
+                              <Check size={16} />
+                            </button>
+                            <button
+                              onClick={annulerEdition}
+                              className="text-secondary hover:bg-surface-container-low p-1 rounded-full transition-colors"
+                              title="Annuler"
+                            >
+                              <X size={16} />
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => demarrerEdition(d)}
+                              className="text-secondary hover:text-primary hover:bg-surface-container-low p-1 rounded-full transition-colors"
+                              title="Modifier ce décodeur"
+                            >
+                              <Pencil size={16} />
+                            </button>
+                            <button
+                              onClick={() => supprimerDecodeur(d)}
+                              className="text-status-red-text hover:bg-status-red-bg p-1 rounded-full transition-colors"
+                              title="Supprimer ce décodeur"
+                            >
+                              <Trash2 size={16} />
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
               {pageItems.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="text-center py-6 text-secondary">
+                  <td colSpan={9} className="text-center py-6 text-secondary">
                     Aucun décodeur trouvé
                   </td>
                 </tr>

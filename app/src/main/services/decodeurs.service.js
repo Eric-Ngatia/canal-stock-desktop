@@ -74,6 +74,33 @@ function transitionAutorisee(statutActuel, statutCible) {
   return ORDRE_STATUT[statutCible] >= ORDRE_STATUT[statutActuel];
 }
 
+/**
+ * Corrige les champs d'identité/logistique d'un décodeur (numéro de série, carton, date de
+ * livraison, destinataire). Volontairement limité à ces champs : le statut, la vente et
+ * l'activation passent par leurs propres flux (`ventes.service.js`, `import.service.js`,
+ * `transitionAutorisee()`) pour ne pas contourner RG-02/RG-03/RG-05.
+ */
+function modifier(id, { numeroSerie, cartonCode, dateLivraison, destinataire } = {}) {
+  const n = (numeroSerie || '').trim();
+  if (!n) {
+    throw new Error('Le numéro de série est obligatoire.'); // RG-01, message explicite avant la contrainte DB
+  }
+
+  const db = getDb();
+  db.prepare(
+    `UPDATE decodeurs
+     SET numero_serie = ?, carton_code = ?, date_livraison = ?, destinataire = ?,
+         updated_at = datetime('now')
+     WHERE id = ?`
+  ).run(
+    n,
+    cartonCode || '',
+    dateLivraison || null,
+    destinataire || '',
+    id
+  );
+}
+
 function supprimer(id) {
   const db = getDb();
   db.prepare('DELETE FROM decodeurs WHERE id = ?').run(id);
@@ -116,4 +143,4 @@ function repartitionParCarton() {
     .all();
 }
 
-module.exports = { ajouterLot, lister, transitionAutorisee, supprimer, compteurs, repartitionParCarton };
+module.exports = { ajouterLot, lister, transitionAutorisee, modifier, supprimer, compteurs, repartitionParCarton };
