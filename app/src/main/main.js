@@ -1,5 +1,5 @@
 const path = require('path');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 require('dotenv').config();
 
 const isDev = !app.isPackaged;
@@ -41,6 +41,11 @@ function creerFenetre() {
 }
 
 app.whenReady().then(() => {
+  // Sans ça, Electron affiche son menu par défaut (File/Edit/View/Window/Help) — y compris
+  // des entrées "Reload"/"Toggle DevTools" que l'utilisateur final n'a aucune raison de voir.
+  // L'app n'a pas de menu personnalisé à proposer, donc autant ne rien afficher.
+  Menu.setApplicationMenu(null);
+
   getDb(); // ouvre le fichier SQLite + joue les migrations avant d'afficher l'UI
   enregistrerHandlers();
   creerFenetre();
