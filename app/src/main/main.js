@@ -2,11 +2,23 @@ const path = require('path');
 const { app, BrowserWindow } = require('electron');
 require('dotenv').config();
 
+const isDev = !app.isPackaged;
+
+/**
+ * Isole les données du mode développement de celles de l'app installée. Sans ça,
+ * `app.getPath('userData')` résout au même dossier (`%APPDATA%\canal-stock-desktop\`) dans
+ * les deux cas — Electron dérive ce chemin du champ `"name"` de `package.json`, identique
+ * qu'on lance `electron .` en dev ou l'exécutable packagé — et toute donnée de test créée
+ * en dev finit dans la base que l'app "production" relit. Doit être appelé avant tout
+ * `getDb()`/`app.getPath('userData')`, donc avant les autres `require` qui en dépendent.
+ */
+if (isDev) {
+  app.setPath('userData', path.join(app.getPath('appData'), 'canal-stock-desktop-dev'));
+}
+
 const { enregistrerHandlers } = require('./ipc/handlers');
 const { getDb } = require('./db/database');
 const exportService = require('./services/export.service');
-
-const isDev = !app.isPackaged;
 
 function creerFenetre() {
   const fenetre = new BrowserWindow({
