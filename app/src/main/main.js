@@ -20,11 +20,23 @@ const { enregistrerHandlers } = require('./ipc/handlers');
 const { getDb } = require('./db/database');
 const exportService = require('./services/export.service');
 
+/**
+ * `build/` est un dossier de ressources de build pour electron-builder (icône de l'installeur,
+ * etc.) — il n'est jamais inclus dans le paquet final (ni dans app.asar, ni copié à côté).
+ * En dev, `__dirname` pointe dans le vrai dossier projet donc `../../build/icon.png` existe
+ * réellement ; en production, ce chemin n'existe nulle part et `BrowserWindow({ icon })` échoue
+ * silencieusement (l'icône par défaut d'Electron reste affichée). D'où la copie explicite via
+ * `extraResources` dans package.json, lue ici via `process.resourcesPath` (hors asar).
+ */
+const cheminIcone = isDev
+  ? path.join(__dirname, '../../build/icon.png')
+  : path.join(process.resourcesPath, 'build', 'icon.png');
+
 function creerFenetre() {
   const fenetre = new BrowserWindow({
     width: 1280,
     height: 800,
-    icon: path.join(__dirname, '../../build/icon.png'),
+    icon: cheminIcone,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true, // ADR 0002 : jamais nodeIntegration côté renderer
