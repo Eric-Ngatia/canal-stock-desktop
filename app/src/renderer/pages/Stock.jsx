@@ -19,7 +19,7 @@ export default function Stock() {
   const [cartonCode, setCartonCode] = useState('');
   const [dateLivraison, setDateLivraison] = useState('');
   const [page, setPage] = useState(1);
-  const [triCarton, setTriCarton] = useState(null); // null | 'asc' | 'desc'
+  const [filtreCarton, setFiltreCarton] = useState(''); // '' = tous les cartons, sinon un code precis
 
   const charger = async () => {
     setItems(await decodeursApi.lister({ statut: filtreStatut || undefined, q: q || undefined }));
@@ -39,12 +39,13 @@ export default function Stock() {
     charger();
   };
 
-  const itemsAffiches = triCarton
-    ? [...items].sort((a, b) => {
-        const cmp = (a.carton_code || '').localeCompare(b.carton_code || '', undefined, { numeric: true, sensitivity: 'base' });
-        return triCarton === 'asc' ? cmp : -cmp;
-      })
-    : items;
+  // Les vrais numéros de carton présents dans le stock chargé, pas un simple ordre — permet de
+  // sauter directement sur le carton qui nous intéresse (bien plus utile qu'un tri générique).
+  const cartonsDisponibles = [...new Set(items.map((d) => d.carton_code).filter(Boolean))].sort(
+    (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+  );
+
+  const itemsAffiches = filtreCarton ? items.filter((d) => d.carton_code === filtreCarton) : items;
 
   const nbPages = Math.max(1, Math.ceil(itemsAffiches.length / PAGE_SIZE));
   const pageItems = itemsAffiches.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
@@ -52,7 +53,7 @@ export default function Stock() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between items-center flex-wrap gap-2">
-        <h1 className="font-page-title text-page-title text-on-surface">Stock ({items.length})</h1>
+        <h1 className="font-page-title text-page-title text-on-surface">Stock ({itemsAffiches.length})</h1>
         <button
           className="bg-primary text-on-primary px-4 py-2 rounded-lg font-subtitle text-subtitle hover:bg-primary-container transition-colors flex items-center gap-2 shadow-sm"
           onClick={() => setShowAdd(!showAdd)}
@@ -116,15 +117,18 @@ export default function Stock() {
           <div className="relative">
             <select
               className="h-10 pl-4 pr-10 border border-outline-variant rounded focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none font-body-table text-body-table appearance-none bg-surface-container-lowest"
-              value={triCarton || ''}
+              value={filtreCarton}
               onChange={(e) => {
-                setTriCarton(e.target.value || null);
+                setFiltreCarton(e.target.value);
                 setPage(1);
               }}
             >
-              <option value="">Trier par carton</option>
-              <option value="asc">N° Carton (croissant)</option>
-              <option value="desc">N° Carton (décroissant)</option>
+              <option value="">Tous les cartons</option>
+              {cartonsDisponibles.map((code) => (
+                <option key={code} value={code}>
+                  Carton {code}
+                </option>
+              ))}
             </select>
             <ChevronDown size={16} className="absolute right-3 top-3 text-outline pointer-events-none" />
           </div>
@@ -200,8 +204,8 @@ export default function Stock() {
         </div>
         <div className="px-4 py-3 border-t border-border-color flex items-center justify-between">
           <div className="text-secondary text-sm">
-            Affichage {items.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}-
-            {Math.min(page * PAGE_SIZE, items.length)} sur {items.length} décodeurs
+            Affichage {itemsAffiches.length === 0 ? 0 : (page - 1) * PAGE_SIZE + 1}-
+            {Math.min(page * PAGE_SIZE, itemsAffiches.length)} sur {itemsAffiches.length} décodeurs
           </div>
           <div className="flex gap-2">
             <button
